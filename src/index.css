@@ -1,0 +1,83 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html[data-theme="light"] .profile {
+  background-color: #fff;
+  color: gray;
+}
+
+html[data-theme="dark"] .profile {
+  background-color: transparent;
+  color: #f5f5f5;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.ps-sidebar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: transparent !important;
+  border-radius: 0.5rem;
+}
+
+.css-1t8x7v1 {
+  transition: transform 0.2s ease-in-out;
+  transition: color 0.1s ease-in-out;
+  border-radius: 0.5rem;
+}
+
+svg {
+  transition: transform 0.2s ease-in-out;
+}
+
+.ps-menu-button {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.css-1t8x7v1:hover .ps-menu-button {
+  background-color: yellow;
+}
+
+.css-1t8x7v1:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: black;
+}
+
+.css-1t8x7v1:hover .sidebarIcons {
+  transform: scale(1.1);
+}
+
+/* @media (prefers-color-scheme: light) {
+
+  .leftSidebar,
+  .SearchComponent {
+      background-color: #ffffff;
+  }
+} */
