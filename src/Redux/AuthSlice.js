@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import firebase, { db } from "../Components/firebase";
-import screenshot1 from "../assets/Images/screenshot1.png";
+import screenshot1 from "../assets/images/screenshot1.png";
 import screenshot2 from "../assets/images/screenshot2.png";
 import screenshot3 from "../assets/images/screenshot3.png";
 import screenshot4 from "../assets/images/screenshot4.png";
