@@ -10,8 +10,8 @@ import Dashboard from "./Components/Dashboard/Dashboard";
 import DashBoardMainContent from "./Components/Dashboard/DashBoardMainContent";
 import Profile from "./Components/Profile/Profile";
 import EditProfile from "./Components/Profile/EditProfile";
-import { Provider } from 'react-redux'
-import { store } from './Redux/store';
+import { Provider } from 'react-redux';
+import { store } from './Redux/Store';
 import Messages from "./Components/Dashboard/Messages";
 
 function App() {
