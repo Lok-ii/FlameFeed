@@ -16,7 +16,7 @@ const AuthFooter = () => {
       <a href="" className="hover:underline">Threads</a>
       <a href="" className="hover:underline">Contact uploading and non-users</a>
       <a href="" className="hover:underline">Meta Verified</a>
-      <select name="language" id="language" className="w-[6rem]">
+      <select name="language" defaultValue="en-gb" id="language" className="w-[6rem]">
         <option value="ar">العربية</option>
         <option value="af">Afrikaans</option>
         <option value="cs">Čeština</option>
@@ -24,7 +24,7 @@ const AuthFooter = () => {
         <option value="de">Deutsch</option>
         <option value="el">Ελληνικά</option>
         <option value="en">English</option>
-        <option value="en-gb" selected>English (UK)</option>
+        <option value="en-gb">English (UK)</option>
         <option value="es">Español (España)</option>
         <option value="es-la">Español</option>
         <option value="fa">فارسی</option>

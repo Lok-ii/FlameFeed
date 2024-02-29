@@ -4,7 +4,7 @@ import Suggested from "./Suggested";
 
 const DashBoardRightSideBar = () => {
   return (
-    <div className="w-[30%] flex flex-col gap-8 pr-48 py-8">
+    <div className="w-[40%] flex flex-col gap-8 pr-48 py-8">
       <div className="currentUser flex items-center justify-between">
         <div className="userProfile flex items-center gap-4">
           <img

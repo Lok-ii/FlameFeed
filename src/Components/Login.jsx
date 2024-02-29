@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import InstaLogo from "./InstaLogo";
 import Or from "./Or";
 import LoginWithFacebook from "./LoginWithFacebook";
@@ -9,14 +9,22 @@ import UseAnimations from "react-useanimations";
 import loading from 'react-useanimations/lib/loading';
 import { ImCross } from "react-icons/im";
 import { Alert } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setError, setLoadingState } from "../Redux/AuthSlice";
+import { userAuthentication } from "../Redux/AuthSlice";
 
 const Login = () => {
   const navigate = useNavigate();
-  const {error, loadingState, loginEmailRef, loginPasswordRef, logIn, user} = useInsta();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const {error, loadingState, user} = useSelector(state => state.auth);
+  
+  const loginEmailRef = useRef();
+  const loginPasswordRef = useRef();
 
   return (
-    <div className={`logInPage ${window.location.pathname === "/login" ? "w-[25%]" : "w-[41%]"} flex flex-col gap-4`}>
+    <div className={`logInPage ${location.pathname === "/login" ? "w-[25%]" : "w-[41%]"} flex flex-col gap-4`}>
       <div className="login border border-gray-300 w-[100%] flex flex-col gap-4 items-center py-8">
         <InstaLogo />
         <form
@@ -24,7 +32,8 @@ const Login = () => {
           className="flex flex-col items-center gap-2 w-[90%] text-xs"
           onSubmit={(e)=>{
             e.preventDefault();
-            let checkUser = logIn(loginEmailRef.current.value, loginPasswordRef.current.value);
+            // let checkUser = logIn(loginEmailRef.current.value, loginPasswordRef.current.value);
+            userAuthentication({type:"LOGIN", email:loginEmailRef.current.value, password:loginPasswordRef.current.value, dispatch:dispatch})
             if(error === "") navigate("/dashboard");
 
           }}

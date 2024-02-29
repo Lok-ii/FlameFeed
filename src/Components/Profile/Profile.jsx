@@ -5,6 +5,7 @@ import { BsGrid3X3 } from "react-icons/bs";
 import { HiOutlineBookmark } from "react-icons/hi2";
 import { LuContact } from "react-icons/lu";
 import cameraIcon from "../../assets/images/camera.png";
+import { Link } from "react-router-dom";
 
 
 const Profile = () => {
@@ -19,7 +20,7 @@ const Profile = () => {
             <p className="text-xl">lokesh_kataria</p>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <button className="editProfile cursor-pointer bg-[#363636] px-4 py-2 font-medium text-sm rounded-lg">Edit profile</button>
+                <Link to={"/dashboard/editprofile"}><button className="editProfile cursor-pointer bg-[#363636] px-4 py-2 font-medium text-sm rounded-lg">Edit profile</button></Link>
                 <button className="viewArchive cursor-pointer bg-[#363636] px-4 py-2 rounded-lg font-medium text-sm">VIew archive</button>
               </div>
               <div className="settingsIcon cursor-pointer">

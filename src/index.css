@@ -74,6 +74,14 @@ svg {
   transform: scale(1.1);
 }
 
+.slider-container{
+  width: 100% !important;
+}
+
+.slide{
+  width: auto !important;
+}
+
 /* @media (prefers-color-scheme: light) {
 
   .leftSidebar,

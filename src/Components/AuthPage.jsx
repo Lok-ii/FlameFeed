@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import authImage from "../assets/images/homepage.png";
 import Login from "./Login";
-import { useInsta } from "../Context/Context";
 import AuthFooter from "./AuthFooter";
 import { Outlet } from 'react-router-dom';
+import { setAuthImage, setImageIdx } from "../Redux/AuthSlice";
+import { useSelector, useDispatch } from "react-redux";
+
 
 const AuthPage = () => {
-  const instaCtx = useInsta();
+  const dispatch = useDispatch();
+  const { authImages, authPageImage, imageIndex } = useSelector(state => state.auth);
+  
+  useEffect(() => {
+    const imageInterval = setInterval(() => {
+      dispatch(setAuthImage(authImages[(imageIndex + 1) % authImages.length]));
+      dispatch(setImageIdx((imageIndex + 1) % authImages.length));
+    }, 2000);
+
+    return () => {
+      clearInterval(imageInterval);
+    };
+  }, [])
 
   return (
     <>
@@ -14,7 +28,7 @@ const AuthPage = () => {
         <div className="authImageContainer relative">
           <img src={authImage} alt="" className="authImage" />
           <img
-            src={instaCtx.authPageImage}
+            src={authPageImage}
             alt=""
             className="changingImage absolute right-[3.7rem] top-6"
           />

@@ -10,10 +10,22 @@ import { Alert } from "@material-tailwind/react";
 import UseAnimations from "react-useanimations";
 import loading from 'react-useanimations/lib/loading';
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setError, setLoadingState, setAuthImage } from "../Redux/AuthSlice";
+import { userAuthentication } from "../Redux/AuthSlice";
+import { useEffect, useRef } from "react";
 
 export default function SignUp() {
-  const instaCtx = useInsta();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  const { error, loadingState, user } = useSelector(state => state.auth);
+  
+  const signUpEmailRef = useRef();
+  const passwordSignupRef = useRef();
+  const usernameRef = useRef();
+  const fullNameRef = useRef();
+
 
   return (
     <div className="w-[25%] flex flex-col items-center gap-4">
@@ -22,7 +34,7 @@ export default function SignUp() {
         <p className="signupText text-sm text-[#737373] font-medium w-[70%] text-center ">
           Sign up to see photos and videos from your friends.
         </p>
-        <div className="loginWithFacebook w-[70%] gap-2 flex items-center justify-center bg-[#4CB5F9] text-white py-2 rounded-lg cursor-pointer" onClick={instaCtx.handleFacebookSignUp}>
+        <div className="loginWithFacebook w-[70%] gap-2 flex items-center justify-center bg-[#4CB5F9] text-white py-2 rounded-lg cursor-pointer">
           <AiFillFacebook className="" />
           <p className="loginFb text-sm font-semibold">Login with Facebook</p>
         </div>
@@ -32,17 +44,17 @@ export default function SignUp() {
           className="flex flex-col items-center gap-2 w-[70%] text-xs"
           onSubmit={(e) => {
             e.preventDefault();
-            instaCtx.signUp();
-            instaCtx.writeUserData();
+            dispatch(userAuthentication({type: "SIGNUP", email: signUpEmailRef.current.value, password: passwordSignupRef.current.value, dispatch:dispatch, username:usernameRef.current.value }))
+            // writeUserData();
             if(error === "") navigate("/login");
           }}
         >
-          {instaCtx.error && (
+          {error && (
             <Alert
               icon={<ImCross className="text-[#F44336] flex items-center justify-center" />}
               className="rounded-none border-l-4 border-[#F44336] bg-[#F44336]/10 font-medium text-[#000] flex items-center justify-center gap-4 "
             >
-              {instaCtx.error}
+              {error}
             </Alert>
           )}
 
@@ -52,7 +64,7 @@ export default function SignUp() {
             name="signEmail"
             id="signEmail"
             placeholder="Mobile number or Email"
-            ref={instaCtx.signUpEmailRef}
+            ref={signUpEmailRef}
           />
           <input
             className="p-2 rounded border w-[100%] bg-[#FAFAFA] border-gray-400"
@@ -60,7 +72,7 @@ export default function SignUp() {
             name="fullName"
             id="fullName"
             placeholder="Full Name"
-            ref={instaCtx.fullNameRef}
+            ref={fullNameRef}
           />
           <input
             className="p-2 rounded border w-[100%] bg-[#FAFAFA] border-gray-400"
@@ -68,7 +80,7 @@ export default function SignUp() {
             name="username"
             id="username"
             placeholder="Username"
-            ref={instaCtx.usernameRef}
+            ref={usernameRef}
           />
           <input
             className="w-[100%] rounded p-2 border border-gray-400 bg-[#FAFAFA]"
@@ -76,7 +88,7 @@ export default function SignUp() {
             name="signInPassword"
             id="signInPassword"
             placeholder="Password"
-            ref={instaCtx.passwordSignupRef}
+            ref={passwordSignupRef}
           />
           <div className="w-[100%] flex flex-col items-center justify-center gap-4">
             <p className="text-xs text-[#737373] w-[100%] text-center">
@@ -94,7 +106,7 @@ export default function SignUp() {
           <button
             className="signUpBtn bg-[#4CB5F9] text-white rounded-lg w-[100%] py-2 text-sm mt-4 font-semibold "
           >
-            {instaCtx.loadingState ? <UseAnimations animation={loading} size={14} /> : "Sign up"}
+            {loadingState ? <UseAnimations animation={loading} size={14} /> : "Sign up"}
           </button>
         </form>
       </div>
