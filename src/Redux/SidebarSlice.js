@@ -6,6 +6,7 @@ const initialState = {
   broken: false,
   isSearchOpen: false,
   isMessageOpen: false,
+  toggleSettings: true,
 };
 
 const sidebarSlice = createSlice({
@@ -21,7 +22,7 @@ const sidebarSlice = createSlice({
     setCollapsed: (state, action) => {
       state.collapsed = action.payload;
     },
-    toggleMessageDrawer: (state, action) => {
+    toggleMessageDrawer: (state) => {
       state.isSearchOpen = false;
       if (state.isSearchOpen) {
         state.collapsed = false;
@@ -30,7 +31,7 @@ const sidebarSlice = createSlice({
       }
       state.isMessageOpen = !state.isMessageOpen;
     },
-    toggleSearchDrawer: (state, action) => {
+    toggleSearchDrawer: (state) => {
       state.isMessageOpen = false;
       if (state.isSearchOpen) {
         state.collapsed = false;
@@ -39,10 +40,17 @@ const sidebarSlice = createSlice({
       }
       state.isSearchOpen = !state.isSearchOpen;
     },
-    collapseAll: (state, action) => {
+    collapseAll: (state) => {
       state.isMessageOpen = false;
       state.isSearchOpen = false;
       state.collapsed = false;
+    },
+    setToggleSetting: (state, action) => {
+      if (action.payload === "") {
+        state.toggleSettings = !state.toggleSettings;
+      }else{
+        state.toggleSettings = action.payload;
+      }
     },
   },
 });
@@ -54,6 +62,7 @@ export const {
   toggleMessageDrawer,
   toggleSearchDrawer,
   collapseAll,
+  setToggleSetting,
 } = sidebarSlice.actions;
 
 export default sidebarSlice.reducer;

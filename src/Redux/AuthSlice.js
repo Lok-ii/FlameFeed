@@ -6,7 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import firebase, { db } from "../Components/firebase";
+import { db } from "../Components/firebase";
 import screenshot1 from "../assets/images/screenshot1.png";
 import screenshot2 from "../assets/images/screenshot2.png";
 import screenshot3 from "../assets/images/screenshot3.png";
@@ -70,22 +70,28 @@ export const userAuthentication = createAsyncThunk(
       let user = {};
       dispatch(setError(""));
       dispatch(setLoadingState(true));
-
+      let signInResponse;
+      let signUpResponse;
       switch (type) {
         case "SIGNUP":
-          const signUpResponse = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-          );
-          user = signUpResponse.user.providerData[0];
-          console.log(user);
-          if (Object.keys(user).length !== 0) {
-            setDoc(doc(db, "users", user.email), { ...user, username });
+          try {
+            dispatch(setError(""))
+            signUpResponse = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            user = signUpResponse.user.providerData[0];
+            console.log(user);
+            if (Object.keys(user).length !== 0) {
+              setDoc(doc(db, "users", user.email), { ...user, username });
+            }
+          } catch (error) {
+            dispatch(setError(error.message.slice(10)));
           }
           break;
         case "LOGIN":
-          const signInResponse = await signInWithEmailAndPassword(
+          signInResponse = await signInWithEmailAndPassword(
             auth,
             email,
             password

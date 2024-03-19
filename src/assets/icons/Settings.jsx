@@ -4,7 +4,7 @@ const Settings = () => {
   return (
     <svg
       aria-label="Options"
-      className="x1lliihq x1n2onr6 x5n08af"
+      className="x1lliihq x1n2onr6 x5n08af w-full h-full"
       fill="currentColor"
       height="24"
       role="img"

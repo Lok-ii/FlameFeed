@@ -1,6 +1,6 @@
-import InstaLogo from "../InstaLogo";
+import InstaLogo from "../../assets/icons/InstaLogo";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import React, { useState, ChangeEvent } from "react";
+import { useState } from "react";
 import Explore from "../../assets/icons/Explore";
 import Reels from "../../assets/icons/Reels";
 import Messages from "../../assets/icons/Messages";
@@ -12,7 +12,6 @@ import More from "../../assets/icons/More";
 import Threads from "../../assets/icons/Threads";
 import { CgProfile } from "react-icons/cg";
 import { AiFillInstagram } from "react-icons/ai";
-import { Badge } from "@material-tailwind/react";
 // import component 👇
 import Drawer from "react-modern-drawer";
 //import styles 👇
@@ -20,19 +19,26 @@ import "react-modern-drawer/dist/index.css";
 import SearchDrawer from "./SearchDrawer";
 import { Link } from "react-router-dom";
 import MessageDrawer from "./MessageDrawer";
+import Setting from "./Setting";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsSearchOpen, setMessageOpen, setCollapsed, toggleMessageDrawer, toggleSearchDrawer, collapseAll } from "../../Redux/SidebarSlice";
+import {
+  toggleMessageDrawer,
+  toggleSearchDrawer,
+  collapseAll,
+  setToggleSetting,
+} from "../../Redux/SidebarSlice";
 
 const DashboardSidebar = () => {
   const [toggled, setToggled] = useState(false);
   const [broken, setBroken] = useState(false);
-  
 
-  const { collapsed, isSearchOpen, isMessageOpen } = useSelector(state => state.sidebar);
+  const { collapsed, isSearchOpen, isMessageOpen } = useSelector(
+    (state) => state.sidebar
+  );
   const dispatch = useDispatch();
 
   return (
-    <div className="h-[100vh] w-[15%] overflow-hidden bg-transparent">
+    <div className="h-[100vh] w-[15%] relative overflow-hidden bg-transparent">
       <Sidebar
         className="sidebar"
         rootStyles={{
@@ -43,7 +49,8 @@ const DashboardSidebar = () => {
           flexDirection: "column",
           gap: "2rem",
           zIndex: "200",
-          width: "100%",
+          width: "15%",
+          position: "fixed"
         }}
         collapsed={collapsed}
         toggled={toggled}
@@ -61,38 +68,38 @@ const DashboardSidebar = () => {
             <MenuItem
               style={{ margin: "2rem 0" }}
               icon={<AiFillInstagram size={25} />}
-              component={<Link to="/dashboard" />}
-              
-            onClick={() => {
-              dispatch(collapseAll());
-            }}
+              component={<Link to={"/dashboard"} />}
+              onClick={() => {
+                dispatch(collapseAll());
+              }}
             >
               <InstaLogo />
             </MenuItem>
           ) : (
             <MenuItem
               style={{ margin: "2rem 0" }}
-              component={<Link to="/dashboard" />}
-              
-            onClick={() => {
-              dispatch(collapseAll());
-            }}
+              component={<Link to={"/dashboard"} />}
+              onClick={() => {
+                dispatch(collapseAll());
+              }}
             >
               <InstaLogo />
             </MenuItem>
           )}
-          <MenuItem component={<Link to={"/dashboard"} />}
-          
+          <MenuItem
+            component={<Link to={"/dashboard"} />}
             onClick={() => {
               dispatch(collapseAll());
-            }} icon={<Home />}>
+            }}
+            icon={<Home />}
+          >
             {" "}
             Home{" "}
           </MenuItem>
           <MenuItem
             icon={<Search />}
             onClick={() => {
-              dispatch(toggleSearchDrawer())
+              dispatch(toggleSearchDrawer());
             }}
           >
             {" "}
@@ -104,26 +111,33 @@ const DashboardSidebar = () => {
             component={<Link to={"/dashboard/messages"} />}
             icon={<Messages />}
             onClick={() => {
-              dispatch(toggleMessageDrawer())
+              dispatch(toggleMessageDrawer());
             }}
           >
             {" "}
             Messages{" "}
           </MenuItem>
-          <MenuItem icon={<Notifications />}
-          
+          <MenuItem
+            icon={<Notifications />}
             onClick={() => {
               dispatch(collapseAll());
-            }}> Notifications </MenuItem>
-          <MenuItem icon={<Create />}
-          
+            }}
+          >
+            {" "}
+            Notifications{" "}
+          </MenuItem>
+          <MenuItem
+            icon={<Create />}
             onClick={() => {
               dispatch(collapseAll());
-            }}> Create </MenuItem>
+            }}
+          >
+            {" "}
+            Create{" "}
+          </MenuItem>
           <MenuItem
             component={<Link to="/dashboard/profile" />}
             icon={<CgProfile size={25} />}
-            
             onClick={() => {
               dispatch(collapseAll());
             }}
@@ -139,18 +153,28 @@ const DashboardSidebar = () => {
             overflow: "hidden",
           }}
         >
-          <MenuItem icon={<Threads />}
-          
+          <MenuItem
+            icon={<Threads />}
             onClick={() => {
               dispatch(collapseAll());
-            }}> Threads </MenuItem>
-          <MenuItem icon={<More />}
-          
+            }}
+          >
+            {" "}
+            Threads{" "}
+          </MenuItem>
+          <MenuItem
+            icon={<More />}
             onClick={() => {
               dispatch(collapseAll());
-            }}> More </MenuItem>
+              dispatch(setToggleSetting(""));
+            }}
+          >
+            {" "}
+            More{" "}
+          </MenuItem>
         </Menu>
       </Sidebar>
+      <Setting />
       <Drawer
         open={isSearchOpen}
         onClose={toggleSearchDrawer}

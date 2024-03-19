@@ -1,10 +1,8 @@
-import { useState } from "react";
 import "./App.css";
-import AuthPage from "./Components/AuthPage";
-import Context from "./Context/Context";
-import SignUp from "./Components/SignUp";
+import AuthPage from "./Components/Authentication/AuthPage";
+import SignUp from "./Components/Authentication/SignUp";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./Components/Login";
+import Login from "./Components/Authentication/Login";
 import firebase from "./Components/firebase";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import DashBoardMainContent from "./Components/Dashboard/DashBoardMainContent";

@@ -35,7 +35,7 @@ const Profile = () => {
           </div>
           <div>
             <p className="font-semibold text-sm">Lokesh</p>
-            <p className="text-sm">Let's just pretend this is a meaningful bio</p>
+            <p className="text-sm">Let&apos;s just pretend this is a meaningful bio</p>
           </div>
         </div>
       </div>
