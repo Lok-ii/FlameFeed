@@ -1,8 +1,11 @@
-import React from "react";
 import profile from "../../assets/images/profile.avif";
 import Suggested from "./Suggested";
+import CreatePost from "../CreatePost/CreatePost";
+import { useSelector } from "react-redux";
 
 const DashBoardRightSideBar = () => {
+
+  const { user } = useSelector(state => state.auth)
   return (
     <div className="w-[40%] flex flex-col gap-8 pr-48 py-8">
       <div className="currentUser flex items-center justify-between">
@@ -13,8 +16,8 @@ const DashBoardRightSideBar = () => {
             alt=""
           />
           <div className="userName">
-            <h2 className="font-semibold text-sm">John Doe</h2>
-            <p className="text-xs">johndoe</p>
+            <h2 className="font-semibold text-sm">{user.displayName}</h2>
+            <p className="text-xs">{user.username}</p>
           </div>
         </div>
         <p className="font-semibold text-blue-400 text-xs cursor-pointer">
@@ -35,6 +38,7 @@ const DashBoardRightSideBar = () => {
         <Suggested username={"username"} />
         <Suggested username={"username"} />
         </div>
+        <CreatePost />
       </div>
     </div>
   );

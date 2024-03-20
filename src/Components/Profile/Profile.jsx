@@ -1,23 +1,34 @@
-import React from "react";
+import { useEffect } from "react";
 import Settings from "../../assets/icons/Settings";
-import profileImg from "../../assets/images/profile.avif";
 import { BsGrid3X3 } from "react-icons/bs";
 import { HiOutlineBookmark } from "react-icons/hi2";
 import { LuContact } from "react-icons/lu";
 import cameraIcon from "../../assets/images/camera.png";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../Redux/AuthSlice";
 
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+    console.log((storedUser));
+    if (storedUser) {
+      dispatch(setUser(storedUser));
+    }
+  }, []);
+
+  const { user } = useSelector(state => state.auth);
   return (
-    <div className="profile flex-grow w-[70%] px-20 py-10 flex items-center flex-col gap-16">
-      <div className="flex items-center gap-32">
-        <div className="profileImageContainer rounded-[50%] w-[9.375rem]">
-          <img className="profileImage rounded-[50%]" src={profileImg} alt="" />
+    user && <div className="profile flex-grow w-[70%] px-20 py-10 flex items-center flex-col gap-16">
+      <div className="flex items-center gap-16">
+        <div className="profileImageContainer rounded-[50%] h-[9.375rem] w-[9.375rem]">
+          <img className="profileImage object-cover w-full h-full rounded-[50%]" src={user.photoURL} alt="" />
         </div>
         <div className="profileDetails flex flex-col gap-4">
           <div className="flex items-center gap-8">
-            <p className="text-xl">lokesh_kataria</p>
+            <p className="text-xl">{user.username}</p>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <Link to={"/dashboard/editprofile"}><button className="editProfile cursor-pointer bg-[#363636] px-4 py-2 font-medium text-sm rounded-lg">Edit profile</button></Link>
@@ -29,13 +40,13 @@ const Profile = () => {
             </div>
           </div>
           <div className="flex items-center gap-12 text-sm">
-            <p><span className="font-semibold">0</span> posts</p>
-            <p><span className="font-semibold">0</span> followers</p>
-            <p><span className="font-semibold">0</span> following</p>
+            {user.posts && <p><span className="font-semibold">{user.posts.length}</span> posts</p>}
+            {user.followers && <p><span className="font-semibold">{user.followers.length}</span> followers</p>}
+            {user.following && <p><span className="font-semibold">{user.following.length}</span> following</p>}
           </div>
           <div>
-            <p className="font-semibold text-sm">Lokesh</p>
-            <p className="text-sm">Let&apos;s just pretend this is a meaningful bio</p>
+            <p className="font-semibold text-sm">{user.displayName}</p>
+            <p className="text-sm">{user.bio}</p>
           </div>
         </div>
       </div>

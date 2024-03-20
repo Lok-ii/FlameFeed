@@ -1,29 +1,67 @@
-import React from "react";
-import profileImg from "../../assets/images/profile.avif";
+import { useEffect, useRef, useState } from "react";
+// import profileImg from "../../assets/images/profile.avif";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  userAuthentication,
+  handlePhoto,
+  setUser,
+} from "../../Redux/AuthSlice";
 
 const EditProfile = () => {
+  const [file, setFile] = useState(null);
+  const fullNameRef = useRef("");
+  const usernameRef = useRef("");
+  const bioRef = useRef("");
+  const genderRef = useRef("");
+  const { user, photoURL } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+    console.log(storedUser);
+    if (storedUser) {
+      dispatch(setUser(storedUser));
+      dispatch(handlePhoto(storedUser.photoURL));
+    }
+  }, []);
   return (
     <div className="w-[70%] px-40 flex flex-col items-center py-8 gap-8">
       <p className="self-start">Edit Profile</p>
       <div className="flex flex-col w-full gap-12">
         <div className="flex w-[80%] bg-[#262626] p-6 rounded-3xl items-center justify-between">
           <div className="flex items-center gap-6">
-            <img
-              className="w-12 rounded-[50%]"
-              src={profileImg}
-              alt="bg-transparent"
-            />
+            <div className="">
+              <label htmlFor="profilePhoto" className=" cursor-pointer">
+                <img
+                  className="w-12 h-12 rounded-[50%]"
+                  src={photoURL}
+                  alt="bg-transparent"
+                />
+              </label>
+              <input
+                type="file"
+                id="profilePhoto"
+                accept=".jpg,.jpeg,.png,.webp,.avif"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  const fileTempURL = URL.createObjectURL(e.target.files[0]);
+                  dispatch(handlePhoto(fileTempURL));
+                  setFile(file);
+                }}
+              />
+            </div>
             <div>
-              <p className="font-semibold">lokesh_kataria</p>
-              <p className="text-sm text-[#F5F5F5]">Lokesh</p>
+              <p className="font-semibold">{user.username}</p>
+              <p className="text-sm text-[#F5F5F5]">{user.displayName}</p>
             </div>
           </div>
-          <button
-            className="bg-blue-500 px-4 py-1 rounded-lg text-sm font-semibold"
+          <label
+            htmlFor="profilePhoto"
+            className="bg-blue-500 px-4 py-1 rounded-lg text-sm font-semibold cursor-pointer"
             type="submit"
           >
             Change photo
-          </button>
+          </label>
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
           <p>Full Name</p>
@@ -31,6 +69,7 @@ const EditProfile = () => {
             className="p-4 bg-transparent border rounded-lg"
             type="text"
             placeholder="Full Name"
+            ref={fullNameRef}
           />
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
@@ -39,6 +78,7 @@ const EditProfile = () => {
             className="p-4 bg-transparent border rounded-lg"
             type="text"
             placeholder="Username"
+            ref={usernameRef}
           />
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
@@ -47,6 +87,7 @@ const EditProfile = () => {
             className="p-4 bg-transparent border rounded-lg"
             type="text"
             placeholder="Bio"
+            ref={bioRef}
           />
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
@@ -55,6 +96,7 @@ const EditProfile = () => {
             className="p-4 bg-transparent border rounded-lg"
             name="gender"
             id="gender"
+            ref={genderRef}
           >
             <option className="bg-black" value="male">
               Male
@@ -69,7 +111,29 @@ const EditProfile = () => {
         </div>
       </div>
       <div className="w-[60%] flex items-center justify-end">
-        <button className="bg-blue-500 px-24 py-3 rounded-lg text-sm font-semibold">Submit</button>
+        <button
+          className="bg-blue-500 px-24 py-3 rounded-lg text-sm font-semibold"
+          onClick={async () => {
+            await dispatch(
+              userAuthentication({
+                type: "PROFILE",
+                email: user.email,
+                password: "",
+                dispatch,
+                username: usernameRef.current.value,
+                fullName: fullNameRef.current.value,
+                bio: bioRef.current.value,
+                gender: genderRef.current.value,
+                photoURL: photoURL,
+                file: file,
+                storedUser: user,
+              })
+            );
+            setFile(null);
+          }}
+        >
+          Submit
+        </button>
       </div>
     </div>
   );

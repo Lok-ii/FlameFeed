@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import authImage from "../../assets/images/homepage.png";
 import AuthFooter from "./AuthFooter";
 import { Outlet } from 'react-router-dom';
-import { setAuthImage, setImageIdx } from "../../Redux/AuthSlice";
+import { setAuthImage, setImageIdx, setUser, handlePhoto } from "../../Redux/AuthSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 
@@ -11,6 +11,12 @@ const AuthPage = () => {
   const { authImages, authPageImage, imageIndex } = useSelector(state => state.auth);
   
   useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+    console.log(storedUser);
+    if (storedUser) {
+      dispatch(setUser(storedUser));
+      dispatch(handlePhoto(storedUser.photoURL));
+    }
     const imageInterval = setInterval(() => {
       dispatch(setAuthImage(authImages[(imageIndex + 1) % authImages.length]));
       dispatch(setImageIdx((imageIndex + 1) % authImages.length));
@@ -23,7 +29,7 @@ const AuthPage = () => {
 
   return (
     <>
-      <div className="authPage w-[60%] flex gap-8 items-start justify-center">
+      <div className="authPage w-[60%] flex gap-8 items-start justify-center pt-4">
         <div className="authImageContainer relative">
           <img src={authImage} alt="" className="authImage" />
           <img

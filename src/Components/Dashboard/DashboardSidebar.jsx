@@ -27,6 +27,7 @@ import {
   collapseAll,
   setToggleSetting,
 } from "../../Redux/SidebarSlice";
+import { setCreateBox } from "../../Redux/postSlice";
 
 const DashboardSidebar = () => {
   const [toggled, setToggled] = useState(false);
@@ -130,6 +131,7 @@ const DashboardSidebar = () => {
             icon={<Create />}
             onClick={() => {
               dispatch(collapseAll());
+              dispatch(setCreateBox(true));
             }}
           >
             {" "}

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import InstaLogo from "../../assets/icons/InstaLogo";
 import Or from "./Or";
 import LoginWithFacebook from "./LoginWithFacebook";
@@ -17,13 +17,21 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const {error, loadingState } = useSelector(state => state.auth);
+  const {error, loadingState, user } = useSelector(state => state.auth);
   
   const loginEmailRef = useRef();
   const loginPasswordRef = useRef();
 
+  useEffect(() => {
+    if(Object.keys(user).length !== 0 && location.pathname === "/" && error === "") {
+      navigate("/dashboard");
+    }else{
+      navigate("/");
+    }
+  }, [error, location.pathname, navigate, user])
+
   return (
-    <div className={`logInPage ${location.pathname === "/login" ? "w-[25%]" : "w-[41%]"} flex flex-col gap-4`}>
+    <div className={`logInPage ${location.pathname === "/login" ? "w-[25%]" : "w-[41%]"} flex flex-col gap-4 py-4`}>
       <div className="login border border-gray-300 w-[100%] flex flex-col gap-4 items-center py-8">
         <InstaLogo />
         <form
@@ -32,8 +40,7 @@ const Login = () => {
           onSubmit={(e)=>{
             e.preventDefault();
             // let checkUser = logIn(loginEmailRef.current.value, loginPasswordRef.current.value);
-            userAuthentication({type:"LOGIN", email:loginEmailRef.current.value, password:loginPasswordRef.current.value, dispatch:dispatch})
-            if(error === "") navigate("/dashboard");
+            dispatch(userAuthentication({type:"LOGIN", email:loginEmailRef.current.value, password:loginPasswordRef.current.value, dispatch}))
 
           }}
         >
@@ -46,7 +53,7 @@ const Login = () => {
             </Alert>
           )}
           <input
-            className="p-2 rounded border w-[100%] bg-[#FAFAFA] border-gray-400"
+            className="p-2 rounded border w-[100%] border-gray-400"
             type="email"
             name="loginEmail"
             id="loginEmail"
@@ -54,7 +61,7 @@ const Login = () => {
             ref={loginEmailRef}
           />
           <input
-            className="w-[100%] rounded p-2 border border-gray-400 bg-[#FAFAFA]"
+            className="w-[100%] rounded p-2 border border-gray-400"
             type="password"
             name="password"
             id="password"

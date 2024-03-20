@@ -4,8 +4,11 @@ import Carousel from "nuka-carousel";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import Post from "./Post";
+import { useSelector } from "react-redux";
 
 const DashBoardMainContent = () => {
+
+  const {user} = useSelector(store => store.auth);
 
   return (
     <div className="w-[85%] flex gap-8">
@@ -35,8 +38,12 @@ const DashBoardMainContent = () => {
             <StoryTile />
           </Carousel>
         </div>
-        <div className="w-[65%] h-[3000px]">
-          <Post />
+        <div className="w-[65%] h-[3000px] py-8 flex flex-col items-center gap-8">
+          {
+            user.posts && user.posts.map((post) => {
+              return <Post key={post.id} post={post} />
+            })
+          }
         </div>
       </div>
       <DashBoardRightSideBar />
