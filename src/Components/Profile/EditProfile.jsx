@@ -15,14 +15,8 @@ const EditProfile = () => {
   const genderRef = useRef("");
   const { user, photoURL } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-    console.log(storedUser);
-    if (storedUser) {
-      dispatch(setUser(storedUser));
-      dispatch(handlePhoto(storedUser.photoURL));
-    }
-  }, []);
+
+  
   return (
     <div className="w-[70%] px-40 flex flex-col items-center py-8 gap-8">
       <p className="self-start">Edit Profile</p>
@@ -70,6 +64,7 @@ const EditProfile = () => {
             type="text"
             placeholder="Full Name"
             ref={fullNameRef}
+            defaultValue={user.displayName}
           />
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
@@ -79,6 +74,7 @@ const EditProfile = () => {
             type="text"
             placeholder="Username"
             ref={usernameRef}
+            defaultValue={user.username}
           />
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
@@ -88,6 +84,7 @@ const EditProfile = () => {
             type="text"
             placeholder="Bio"
             ref={bioRef}
+            defaultValue={user.bio}
           />
         </div>
         <div className="flex flex-col gap-2 w-[80%]">
@@ -97,6 +94,7 @@ const EditProfile = () => {
             name="gender"
             id="gender"
             ref={genderRef}
+            defaultValue={user.gender}
           >
             <option className="bg-black" value="male">
               Male

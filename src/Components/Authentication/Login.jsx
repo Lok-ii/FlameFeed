@@ -23,7 +23,7 @@ const Login = () => {
   const loginPasswordRef = useRef();
 
   useEffect(() => {
-    if(Object.keys(user).length !== 0 && location.pathname === "/" && error === "") {
+    if(user !== null && user !== undefined && Object.keys(user).length !== 0 && location.pathname === "/" && error === "") {
       navigate("/dashboard");
     }else{
       navigate("/");

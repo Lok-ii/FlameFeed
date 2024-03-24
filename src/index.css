@@ -82,6 +82,10 @@ svg {
   width: auto !important;
 }
 
+.EZDrawer__overlay {
+  width: 30% !important;
+}
+
 /* @media (prefers-color-scheme: light) {
 
   .leftSidebar,

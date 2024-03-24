@@ -56,7 +56,11 @@ export default function SignUp() {
                 })
               );
               // writeUserData();
-              if (error === "") navigate("/login");
+              if (error !== "") {
+                navigate("/signup");
+              }else{
+                navigate("/login")
+              }
             }}
           >
             {error && (
@@ -124,7 +128,7 @@ export default function SignUp() {
             </button>
           </form>
         </div>
-        <Account content="Have an account?" name="Log in" link="/login" />
+        <Account content="Have an account?" name="Log in" link="/" />
         <Download />
       </div>
       <AuthFooter />

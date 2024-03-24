@@ -10,7 +10,15 @@ import {
 import { storage } from "../Components/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import profile from "../assets/images/profile.avif";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../Components/firebase";
 import screenshot1 from "../assets/images/screenshot1.png";
 import screenshot2 from "../assets/images/screenshot2.png";
@@ -36,8 +44,10 @@ const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
-      localStorage.setItem("currentUser", JSON.stringify(state.user));
+      if (typeof action.payload !== String) {
+        state.user = action.payload;
+        localStorage.setItem("currentUser", JSON.stringify(state.user));
+      }
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -62,8 +72,10 @@ const authSlice = createSlice({
       })
       .addCase(userAuthentication.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
-        localStorage.setItem("currentUser", JSON.stringify(state.user));
+        if (typeof action.payload !== "string") {
+          state.user = action.payload;
+          localStorage.setItem("currentUser", JSON.stringify(state.user));
+        }
       })
       .addCase(userAuthentication.rejected, (state, action) => {
         state.status = "failed";
@@ -85,13 +97,14 @@ export const userAuthentication = createAsyncThunk(
     gender,
     photoURL,
     file,
-    storedUser
+    storedUser,
   }) => {
     try {
       let user = {};
       dispatch(setError(""));
       dispatch(setLoadingState(true));
       let signUpResponse;
+      let isUserExist = [];
       let signInResponse;
       let docRef;
       let docSnap;
@@ -103,30 +116,51 @@ export const userAuthentication = createAsyncThunk(
         case "SIGNUP":
           try {
             dispatch(setError(""));
-            signUpResponse = await createUserWithEmailAndPassword(
-              auth,
-              email,
-              password
+            const usersRef = await collection(db, "users");
+            const q = await query(
+              usersRef,
+              where("username", "==", `${username}`)
             );
-            user = signUpResponse.user.providerData[0];
-            newUserData = {
-              ...user,
-              uid: nanoid(),
-              displayName: fullName,
-              username,
-              followers: [],
-              following: [],
-              posts: [],
-              photoURL: profile,
-              bio: "",
-              gender: "Prefer not to say",
-            };
-            if (Object.keys(user).length !== 0) {
-              setDoc(doc(db, "users", newUserData.uid), newUserData);
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+              isUserExist.push(doc.data());
+            });
+            if (isUserExist.length !== 0) {
+              dispatch(setError("Username already exists"));
+              throw new Error("Username already exists");
+            } else {
+              signUpResponse = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+              );
+              user = signUpResponse.user.providerData[0];
+              newUserData = {
+                ...user,
+                id: nanoid(),
+                displayName: fullName,
+                username,
+                followers: [],
+                following: [],
+                posts: [],
+                likedPosts: [],
+                saved: [],
+                photoURL: profile,
+                bio: "",
+                gender: "Prefer not to say",
+              };
+              if (Object.keys(user).length !== 0) {
+                await setDoc(doc(db, "users", newUserData.uid), newUserData);
+              }
+              newUserData = {};
+              dispatch(setError(""));
             }
-            dispatch(setError(""));
           } catch (error) {
-            dispatch(setError(error.message.slice(10)));
+            if (error.message !== "Username already exists") {
+              dispatch(setError(error.message.slice(10)));
+            }
+            dispatch(setError("Username already exists"));
           }
           break;
         case "LOGIN":
@@ -136,22 +170,18 @@ export const userAuthentication = createAsyncThunk(
             password
           );
           user = signInResponse.user.providerData[0];
-          console.log(user);
-          docRef = doc(db, "users", user.uid);
+          docRef = await doc(db, "users", user.uid);
           docSnap = await getDoc(docRef);
 
           if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
             newUserData = docSnap.data();
           } else {
             // docSnap.data() will be undefined in this case
-            console.log("No such document!");
+            console.error("No such document!");
           }
-          // console.log(await doc(db, "users", user.email));
-          // user = getDoc(doc(db, "users", user.email));
-          // user = signInResponse.user.providerData[0];
           break;
         case "SIGNOUT":
+          newUserData = null;
           signOut(auth);
           break;
         case "PROFILE":
@@ -163,10 +193,9 @@ export const userAuthentication = createAsyncThunk(
               );
               snapshot = await uploadBytes(storageRef, file);
               downloadURL = await getDownloadURL(snapshot.ref);
-              console.log("File uploaded successfully:", downloadURL);
               photoURL = downloadURL;
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
           } else {
             photoURL = storedUser.photoURL;

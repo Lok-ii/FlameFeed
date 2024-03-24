@@ -4,11 +4,28 @@ import Carousel from "nuka-carousel";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import Post from "./Post";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase.js";
+import { setAllPosts } from "../../Redux/postSlice.js";
 
 const DashBoardMainContent = () => {
+  const { user } = useSelector(store => store.auth)
+  const {allPosts, isLiked } = useSelector(store => store.post);
+  const dispatch = useDispatch();
 
-  const {user} = useSelector(store => store.auth);
+  // useEffect(() => {
+  //     const fetchUser = async () => {
+  //       const posts = await getDocs(collection(db, "posts"));
+  //       let postsData = [];
+  //       posts.forEach((post) => {
+  //         postsData.push(post.data());
+  //       })
+  //       dispatch(setAllPosts(postsData));
+  //     }
+  //     fetchUser();
+  //   }, [isLiked]);
 
   return (
     <div className="w-[85%] flex gap-8">
@@ -40,8 +57,12 @@ const DashBoardMainContent = () => {
         </div>
         <div className="w-[65%] h-[3000px] py-8 flex flex-col items-center gap-8">
           {
-            user.posts && user.posts.map((post) => {
-              return <Post key={post.id} post={post} />
+            allPosts && allPosts.map((post) => {
+              if(post.user === user.uid || user.following.includes(post.user)){
+                return <Post key={post.id} post={post} />
+              }else{
+                return null;
+              }
             })
           }
         </div>

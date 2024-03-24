@@ -4,14 +4,17 @@ import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 import { useDispatch, useSelector } from "react-redux";
 import { IoCloseSharp } from "react-icons/io5";
-import { setMediaAttached, setMedia, createPost, setCreateBox } from "../../Redux/postSlice";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import {
+  setMediaAttached,
+  setMedia,
+  createPost,
+  setCreateBox,
+  setIsLoading,
+} from "../../Redux/postSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreatePost = () => {
-
-  
   const notify = () => toast("Posted Successfully");
 
   const [mediaFile, setMediaFile] = useState("");
@@ -19,18 +22,26 @@ const CreatePost = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.auth);
-  const { media, mediaAttached, createBox } = useSelector((store) => store.post);
+  const { media, mediaAttached, createBox, isLoading, allPosts } = useSelector(
+    (store) => store.post
+  );
   return (
     <div
       className={`fixed ${
-        !mediaAttached ? createBox ? "w-[40%] left-[30%] h-[90vh] animate__zoomIn" : "w-0 h-0 animate__zoomOut" : "w-[80%] left-[10%] h-[90vh]"
-      } animate__animated z-[10000] top-[3rem]  bg-grayPrimary rounded-lg transition-all duration-300 overflow-hidden `}
+        !mediaAttached
+          ? createBox
+            ? "w-[40%] left-[30%] h-[90vh] animate__zoomIn"
+            : "w-0 h-0 animate__zoomOut"
+          : "w-[80%] left-[10%] h-[90vh]"
+      } animate__animated z-[10000] top-[3rem]  bg-grayPrimary rounded-lg transition-all duration-300 overflow-hidden ${createBox ? "" : "hidden"}`}
     >
-      
       <ToastContainer autoClose={2000} />
       <div className="w-full border-b-[1px] border-b-lightGrayPrimary flex justify-center relative">
         <p className="py-2 font-semibold">Create a new post</p>
-        <IoCloseSharp className="absolute text-textGray text-xl top-3 right-2 cursor-pointer" onClick={() => dispatch(setCreateBox(false))} />
+        <IoCloseSharp
+          className="absolute text-textGray text-xl top-3 right-2 cursor-pointer"
+          onClick={() => dispatch(setCreateBox(false))}
+        />
       </div>
       {!mediaAttached ? (
         <div className="flex flex-col w-full h-full justify-center">
@@ -97,20 +108,22 @@ const CreatePost = () => {
               onClick={async (e) => {
                 e.preventDefault();
                 if (mediaFile) {
+                  dispatch(setIsLoading(true));
                   await dispatch(
                     createPost({
                       type: "POSTS",
                       file: mediaFile,
                       storedUser: user,
                       caption: captionRef.current.value,
+                      allPosts,
                       dispatch,
-                      notify
+                      notify,
                     })
                   );
                 }
               }}
             >
-              {!mediaAttached ? (
+              {isLoading ? (
                 <UseAnimations animation={loading} size={14} />
               ) : (
                 "Post"

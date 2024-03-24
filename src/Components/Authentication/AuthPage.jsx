@@ -12,7 +12,6 @@ const AuthPage = () => {
   
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-    console.log(storedUser);
     if (storedUser) {
       dispatch(setUser(storedUser));
       dispatch(handlePhoto(storedUser.photoURL));

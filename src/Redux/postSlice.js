@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { storage } from "../Components/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../Components/firebase";
 import { setUser } from "./AuthSlice";
 import { v4 as uuidv4 } from "uuid";
 import { nanoid } from "nanoid";
+import dayjs from "dayjs";
 
 const initialState = {
   status: "idle",
@@ -13,6 +14,9 @@ const initialState = {
   media: " ",
   mediaAttached: false,
   anyError: "",
+  isLiked: [],
+  allPosts: [],
+  isLoading: false,
 };
 
 const postSlice = createSlice({
@@ -28,6 +32,19 @@ const postSlice = createSlice({
     setMediaAttached: (state, action) => {
       state.mediaAttached = action.payload;
     },
+    setIsLiked: (state, action) => {
+      if (action.payload.type === "not-liked") {
+        state.isLiked.push(action.payload.id);
+      } else if(action.payload.type === "already-liked") {
+        state.isLiked = state.isLiked.filter((id) => id !== action.payload.id);
+      }
+    },
+    setAllPosts: (state, action) => {
+      state.allPosts = action.payload;
+    },
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,6 +56,8 @@ const postSlice = createSlice({
         state.media = action.payload.media;
         state.mediaAttached = action.payload.mediaAttached;
         state.createBox = action.payload.createBox;
+        state.allPosts = [...action.payload.posts];
+        state.isLoading = action.payload.isLoading;
       })
       .addCase(createPost.rejected, (state, action) => {
         state.status = "failed";
@@ -49,12 +68,28 @@ const postSlice = createSlice({
 
 export const createPost = createAsyncThunk(
   "post/postEdit",
-  async ({ type, file, storedUser, caption, dispatch, notify }) => {
+  async ({
+    type,
+    file,
+    storedUser,
+    caption,
+    dispatch,
+    post,
+    notify,
+    currentLiked,
+    allPosts,
+  }) => {
     try {
       let newUserData = {};
       let storageRef;
       let snapshot;
       let downloadURL;
+      let likedPosts = [];
+      let postLikes = [];
+      let postData;
+      let postId;
+      let posts = [];
+      let postUserData = {};
       switch (type) {
         case "POSTS":
           if (file) {
@@ -65,39 +100,80 @@ export const createPost = createAsyncThunk(
               );
               snapshot = await uploadBytes(storageRef, file);
               downloadURL = await getDownloadURL(snapshot.ref);
-              console.log("File uploaded successfully:", downloadURL);
+              postId = nanoid(5);
+              postData = {
+                id: postId,
+                media: downloadURL,
+                caption: caption,
+                userName: storedUser.username,
+                photoURL: storedUser.photoURL,
+                likes: [],
+                comments: [],
+                user: storedUser.uid,
+                createdAt: new Date().toISOString(),
+              };
+              posts = [...allPosts, postData];
+              posts.sort((a, b) => {
+                return dayjs(b.createdAt) - dayjs(a.createdAt);
+              })
               newUserData = {
                 ...storedUser,
-                posts: [
-                  {
-                    id: nanoid(5),
-                    media: downloadURL,
-                    caption: caption,
-                    userName: storedUser.username,
-                    likes: [],
-                    comments: [],
-                    user: storedUser.uid,
-                    createdAt: new Date().toISOString(),
-                  },
-                  ...storedUser.posts,
-                ],
+                posts: [postData, ...storedUser.posts],
               };
-              console.log(newUserData);
               if (Object.keys(newUserData).length !== 0) {
                 setDoc(doc(db, "users", newUserData.uid), newUserData);
+                setDoc(doc(db, "posts", postId), postData);
               }
               dispatch(setUser(newUserData));
               notify();
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
           }
+          break;
+        case "LIKES":
+          if (currentLiked.includes(post.id)) {
+            likedPosts = currentLiked.filter((id) => id !== post.id);
+            postLikes = post.likes.filter((id) => id !== storedUser.uid);
+          } else {
+            likedPosts = [...currentLiked, post.id];
+            postLikes = [...post.likes, storedUser.uid];
+          }
 
+          newUserData = {
+            ...storedUser,
+            likedPosts,
+          };
+
+          postData = {
+            ...post,
+            likes: [...postLikes],
+          };
+
+          posts = allPosts.map((p)  => {
+            if(p.id === post.id){
+              return postData;
+            }else{
+              return p;
+            }
+          })
+
+          /**
+           * 1. user liked data update
+           * 2. post likes update
+           * 3. change likes in the user posts data
+           */
+          if (Object.keys(newUserData).length != 0) {
+            await setDoc(doc(db, "users", newUserData.uid), newUserData);
+            await setDoc(doc(db, "posts", post.id), postData);
+            // await setDoc(doc(db, "users", post.user), postUserData);
+          }
+          dispatch(setUser(newUserData));
           break;
         default:
           throw new Error("Invalid type");
       }
-      return { media: " ", mediaAttached: false, createBox: false };
+      return { media: " ", mediaAttached: false, createBox: false, posts: posts, isLoading: false };
     } catch (error) {
       console.error(error.code, error.message);
       return error.message;
@@ -105,6 +181,13 @@ export const createPost = createAsyncThunk(
   }
 );
 
-export const { setCreateBox, setMedia, setMediaAttached } = postSlice.actions;
+export const {
+  setCreateBox,
+  setMedia,
+  setMediaAttached,
+  setIsLiked,
+  setAllPosts,
+  setIsLoading
+} = postSlice.actions;
 
 export default postSlice.reducer;

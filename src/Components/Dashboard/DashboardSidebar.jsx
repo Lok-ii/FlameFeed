@@ -36,6 +36,7 @@ const DashboardSidebar = () => {
   const { collapsed, isSearchOpen, isMessageOpen } = useSelector(
     (state) => state.sidebar
   );
+  const { user } = useSelector(store => store.auth)
   const dispatch = useDispatch();
 
   return (
@@ -55,7 +56,7 @@ const DashboardSidebar = () => {
         }}
         collapsed={collapsed}
         toggled={toggled}
-        onBackdropClick={() => setToggled(false)}
+        // onBackdropClick={() => setToggled(false)}
         onBreakPoint={setBroken}
         breakPoint="md"
       >
@@ -112,6 +113,7 @@ const DashboardSidebar = () => {
             component={<Link to={"/dashboard/messages"} />}
             icon={<Messages />}
             onClick={() => {
+              dispatch(collapseAll());
               dispatch(toggleMessageDrawer());
             }}
           >
@@ -138,7 +140,7 @@ const DashboardSidebar = () => {
             Create{" "}
           </MenuItem>
           <MenuItem
-            component={<Link to="/dashboard/profile" />}
+            component={<Link to={`/dashboard/profile/${user.username}`} />}
             icon={<CgProfile size={25} />}
             onClick={() => {
               dispatch(collapseAll());
@@ -165,10 +167,12 @@ const DashboardSidebar = () => {
             Threads{" "}
           </MenuItem>
           <MenuItem
+          className="moreSettings"
             icon={<More />}
             onClick={() => {
               dispatch(collapseAll());
               dispatch(setToggleSetting(""));
+              dispatch(setCreateBox(false));
             }}
           >
             {" "}

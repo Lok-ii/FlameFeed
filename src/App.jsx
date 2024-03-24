@@ -41,7 +41,7 @@ function App() {
           element: <DashBoardMainContent />,
         },
         {
-          path: "profile",
+          path: "profile/:username",
           element: <Profile />,
         },
         {
