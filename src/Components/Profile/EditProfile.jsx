@@ -14,6 +14,7 @@ const EditProfile = () => {
   const bioRef = useRef("");
   const genderRef = useRef("");
   const { user, photoURL } = useSelector((store) => store.auth);
+  const { allPosts } = useSelector((store) => store.post);
   const dispatch = useDispatch();
 
   
@@ -125,6 +126,7 @@ const EditProfile = () => {
                 photoURL: photoURL,
                 file: file,
                 storedUser: user,
+                allPosts
               })
             );
             setFile(null);

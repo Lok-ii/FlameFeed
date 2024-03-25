@@ -11,6 +11,7 @@ import EditProfile from "./Components/Profile/EditProfile";
 import { Provider } from 'react-redux';
 import { store } from './Redux/Store';
 import Messages from "./Components/Dashboard/Messages";
+import PostModal from "./Components/Dashboard/PostModal";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,7 +52,7 @@ function App() {
         {
           path: "messages",
           element: <Messages />
-        }
+        },
       ],
     }
   ]);

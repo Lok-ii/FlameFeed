@@ -11,12 +11,15 @@ import dayjs from "dayjs";
 const initialState = {
   status: "idle",
   createBox: false,
+  expandedPost: {},
   media: " ",
   mediaAttached: false,
   anyError: "",
   isLiked: [],
   allPosts: [],
+  userPosts: [],
   isLoading: false,
+  isModalOpen : false,
 };
 
 const postSlice = createSlice({
@@ -35,8 +38,10 @@ const postSlice = createSlice({
     setIsLiked: (state, action) => {
       if (action.payload.type === "not-liked") {
         state.isLiked.push(action.payload.id);
-      } else if(action.payload.type === "already-liked") {
+      } else if (action.payload.type === "already-liked") {
         state.isLiked = state.isLiked.filter((id) => id !== action.payload.id);
+      } else {
+        state.isLiked = action.payload;
       }
     },
     setAllPosts: (state, action) => {
@@ -44,6 +49,15 @@ const postSlice = createSlice({
     },
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
+    },
+    setExpandedPost: (state, action) => {
+      state.expandedPost = action.payload;
+    },
+    setIsModalOpen: (state, action) => {
+      state.isModalOpen = action.payload;
+    },
+    setUserPosts: (state, action) => {
+      state.userPosts = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -78,6 +92,7 @@ export const createPost = createAsyncThunk(
     notify,
     currentLiked,
     allPosts,
+    comment,
   }) => {
     try {
       let newUserData = {};
@@ -90,6 +105,7 @@ export const createPost = createAsyncThunk(
       let postId;
       let posts = [];
       let postUserData = {};
+      let commentData = {};
       switch (type) {
         case "POSTS":
           if (file) {
@@ -103,6 +119,7 @@ export const createPost = createAsyncThunk(
               postId = nanoid(5);
               postData = {
                 id: postId,
+                expandedId: nanoid(8),
                 media: downloadURL,
                 caption: caption,
                 userName: storedUser.username,
@@ -115,7 +132,7 @@ export const createPost = createAsyncThunk(
               posts = [...allPosts, postData];
               posts.sort((a, b) => {
                 return dayjs(b.createdAt) - dayjs(a.createdAt);
-              })
+              });
               newUserData = {
                 ...storedUser,
                 posts: [postData, ...storedUser.posts],
@@ -150,13 +167,13 @@ export const createPost = createAsyncThunk(
             likes: [...postLikes],
           };
 
-          posts = allPosts.map((p)  => {
-            if(p.id === post.id){
+          posts = allPosts.map((p) => {
+            if (p.id === post.id) {
               return postData;
-            }else{
+            } else {
               return p;
             }
-          })
+          });
 
           /**
            * 1. user liked data update
@@ -170,10 +187,41 @@ export const createPost = createAsyncThunk(
           }
           dispatch(setUser(newUserData));
           break;
+        case "COMMENT":
+          commentData = {
+            id: nanoid(8),
+            content: comment,
+            username: storedUser.username,
+            photoURL: storedUser.photoURL,
+            user: storedUser.uid,
+            createdAt: new Date().toISOString(),
+            commentLikes: [],
+          };
+          postData = {
+           ...post,
+            comments: [commentData, ...post.comments],
+          };
+
+          posts = [...allPosts];
+          posts = posts.map(p => {
+            if(p.id === post.id) {
+              return postData;
+            }else{
+              return p;
+            }
+          })
+          setDoc(doc(db, "posts", post.id), postData);
+          break;
         default:
           throw new Error("Invalid type");
       }
-      return { media: " ", mediaAttached: false, createBox: false, posts: posts, isLoading: false };
+      return {
+        media: " ",
+        mediaAttached: false,
+        createBox: false,
+        posts: posts,
+        isLoading: false,
+      };
     } catch (error) {
       console.error(error.code, error.message);
       return error.message;
@@ -187,7 +235,10 @@ export const {
   setMediaAttached,
   setIsLiked,
   setAllPosts,
-  setIsLoading
+  setIsLoading,
+  setExpandedPost,
+  setIsModalOpen,
+  setUserPosts
 } = postSlice.actions;
 
 export default postSlice.reducer;

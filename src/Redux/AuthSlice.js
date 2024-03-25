@@ -24,6 +24,7 @@ import screenshot1 from "../assets/images/screenshot1.png";
 import screenshot2 from "../assets/images/screenshot2.png";
 import screenshot3 from "../assets/images/screenshot3.png";
 import screenshot4 from "../assets/images/screenshot4.png";
+import { setAllPosts } from "./postSlice";
 
 const initialState = {
   user: {},
@@ -98,6 +99,7 @@ export const userAuthentication = createAsyncThunk(
     photoURL,
     file,
     storedUser,
+    allPosts,
   }) => {
     try {
       let user = {};
@@ -112,6 +114,9 @@ export const userAuthentication = createAsyncThunk(
       let storageRef;
       let snapshot;
       let downloadURL;
+      let posts = [];
+      let comments = [];
+      let commentLikes = [];
       switch (type) {
         case "SIGNUP":
           try {
@@ -208,6 +213,47 @@ export const userAuthentication = createAsyncThunk(
             bio: bio,
             gender: gender,
           };
+
+          posts = allPosts.map((post) => {
+            if (post.userName === storedUser.username) {
+              comments = post.comments.map((comment) => {
+                
+                  commentLikes = comment.commentLikes.map((like) => {
+                    if (like === storedUser.username) {
+                      return username;
+                    }
+                    return like;
+                  });
+                if (comment.username === storedUser.username) {
+                  return {
+                   ...comment,
+                    photoURL: photoURL,
+                    username: username,
+                    commentLikes
+                  };
+                }else{
+                  return comment;
+                }
+              });
+              return {
+                ...post,
+                photoURL: photoURL,
+                userName: username,
+                comments
+              };
+            } else {
+              return {
+                ...post,
+                comments
+              };
+            }
+          });
+          dispatch(setAllPosts(posts));
+          console.log("properly working");
+          posts.forEach((post) => {
+            setDoc(doc(db, "posts", post.id), post);
+          });
+          console.log("properly working");
 
           if (Object.keys(newUserData).length !== 0) {
             setDoc(doc(db, "users", newUserData.uid), newUserData);

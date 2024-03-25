@@ -5,7 +5,7 @@ import { setUser, handlePhoto } from "../../Redux/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggleSetting } from "../../Redux/SidebarSlice";
 import { collection, getDocs } from "firebase/firestore";
-import { setAllPosts } from "../../Redux/postSlice";
+import { setAllPosts, setIsLiked } from "../../Redux/postSlice";
 import { db } from "../firebase";
 import dayjs from "dayjs";
 
@@ -21,6 +21,7 @@ const Dashboard = () => {
     if (storedUser !== null && storedUser !== undefined && Object.keys(storedUser).length > 0 && typeof storedUser !== "string") {
       dispatch(setUser(storedUser));
       dispatch(handlePhoto(storedUser.photoURL));
+      dispatch(setIsLiked(storedUser.likedPosts))
     }else if(storedUser === "Error (auth/invalid-credential)."){
       navigate("/");
     }else{

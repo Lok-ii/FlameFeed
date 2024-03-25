@@ -9,11 +9,14 @@ import { useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase.js";
 import { setAllPosts } from "../../Redux/postSlice.js";
+import PostModal from "./PostModal.jsx";
+import { nanoid } from "nanoid";
 
 const DashBoardMainContent = () => {
   const { user } = useSelector(store => store.auth)
   const {allPosts, isLiked } = useSelector(store => store.post);
   const dispatch = useDispatch();
+  // console.log(nanoid(8))
 
   // useEffect(() => {
   //     const fetchUser = async () => {
@@ -59,7 +62,7 @@ const DashBoardMainContent = () => {
           {
             allPosts && allPosts.map((post) => {
               if(post.user === user.uid || user.following.includes(post.user)){
-                return <Post key={post.id} post={post} />
+                return <Post key={post.id} post={post} type={"NORMAL"} />
               }else{
                 return null;
               }
@@ -67,6 +70,7 @@ const DashBoardMainContent = () => {
           }
         </div>
       </div>
+      <PostModal />
       <DashBoardRightSideBar />
     </div>
   );

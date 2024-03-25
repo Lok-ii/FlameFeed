@@ -10,6 +10,7 @@ import { setUser } from "../../Redux/AuthSlice";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { profileStats, setSearchedUser } from "../../Redux/profileSlice";
+import { setUserPosts } from "../../Redux/postSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const Profile = () => {
 
   const { user } = useSelector((state) => state.auth);
   const { searchedUser } = useSelector((state) => state.profile);
+  const { allPosts, userPosts } = useSelector((store) => store.post);
 
   useEffect(() => {
     const getUser = async () => {
@@ -26,15 +28,20 @@ const Profile = () => {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
-        dispatch(setSearchedUser(doc.data()));        
+        dispatch(setSearchedUser(doc.data()));
       });
     };
-    if(user.username !== params.username){
+    if (user.username !== params.username) {
       getUser();
-    }else{
+    } else {
       dispatch(setSearchedUser(user));
     }
-  }, [dispatch, params.username, user]);
+
+    const getUserPosts = allPosts.filter(
+      (post) => post.userName === params.username
+    );
+    dispatch(setUserPosts(getUserPosts));
+  }, [allPosts, dispatch, params.username, user]);
   return (
     user && (
       <div className="profile flex-grow w-[70%] px-20 py-10 flex items-center flex-col gap-16">
@@ -58,10 +65,23 @@ const Profile = () => {
                       </button>
                     </Link>
                   ) : (
-                    <button className="editProfile cursor-pointer bg-[#363636] px-4 py-2 font-medium text-sm rounded-lg" onClick={() => {
-                      dispatch(profileStats({type: "FOLLOW", loggedUser: user, searchedUser, dispatch }))
-                    }}>
-                      {searchedUser.followers && !searchedUser.followers.includes(user.uid) ? "Follow" : "Unfollow"}
+                    <button
+                      className="editProfile cursor-pointer bg-[#363636] px-4 py-2 font-medium text-sm rounded-lg"
+                      onClick={() => {
+                        dispatch(
+                          profileStats({
+                            type: "FOLLOW",
+                            loggedUser: user,
+                            searchedUser,
+                            dispatch,
+                          })
+                        );
+                      }}
+                    >
+                      {searchedUser.followers &&
+                      !searchedUser.followers.includes(user.uid)
+                        ? "Follow"
+                        : "Unfollow"}
                     </button>
                   )}
                   {params.username === user.username && (
@@ -78,25 +98,33 @@ const Profile = () => {
             <div className="flex items-center gap-12 text-sm">
               {searchedUser.posts && (
                 <p>
-                  <span className="font-semibold">{searchedUser.posts.length}</span>{" "}
+                  <span className="font-semibold">
+                    {searchedUser.posts.length}
+                  </span>{" "}
                   posts
                 </p>
               )}
               {searchedUser.followers && (
                 <p>
-                  <span className="font-semibold">{searchedUser.followers.length}</span>{" "}
+                  <span className="font-semibold">
+                    {searchedUser.followers.length}
+                  </span>{" "}
                   followers
                 </p>
               )}
               {searchedUser.following && (
                 <p>
-                  <span className="font-semibold">{searchedUser.following.length}</span>{" "}
+                  <span className="font-semibold">
+                    {searchedUser.following.length}
+                  </span>{" "}
                   following
                 </p>
               )}
             </div>
             <div>
-              <p className="font-semibold text-sm">{searchedUser.displayName}</p>
+              <p className="font-semibold text-sm">
+                {searchedUser.displayName}
+              </p>
               <p className="text-sm">{searchedUser.bio}</p>
             </div>
           </div>
@@ -116,20 +144,42 @@ const Profile = () => {
               <p>TAGGED</p>
             </div>
           </div>
-          <div className="flex items-center justify-center w-full min-h-96">
-            <div className="flex flex-col items-center gap-4">
-              <div>
-                <img src={cameraIcon} alt="" />
-              </div>
-              <h1 className="text-[2rem] font-extrabold">Share Photos</h1>
-              <p className="text-sm">
-                When you share phots, they will appear on your proile.
-              </p>
-              <p className="text-sm text-blue-500 font-semibold">
-                Share your first photo
-              </p>
+          {userPosts && (
+            <div
+              className={`flex ${
+                user.posts.length === 0 ? "items-center" : ""
+              } justify-center w-full min-h-96`}
+            >
+              {userPosts.length === 0 ? (
+                <div className="flex flex-col items-center gap-4">
+                  <div>
+                    <img src={cameraIcon} alt="" />
+                  </div>
+                  <h1 className="text-[2rem] font-extrabold">Share Photos</h1>
+                  <p className="text-sm">
+                    When you share phots, they will appear on your proile.
+                  </p>
+                  <p className="text-sm text-blue-500 font-semibold">
+                    Share your first photo
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap w-[100%] gap-y-0">
+                  {userPosts.map((post) => {
+                    return (
+                      <div className={`w-[10rem] h-[10rem]`} key={post.id}>
+                        <img
+                          src={post.media}
+                          className="w-full h-full object-cover"
+                          alt=""
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
       </div>
     )
