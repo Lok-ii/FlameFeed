@@ -38,8 +38,8 @@ To explore this project locally, follow these simple steps:
 3. Install project dependencies by running `npm install` or `yarn install`.
 4. Set up Firebase by creating a project on the Firebase console and configuring authentication, Firestore, and Storage services.
 5. Create a `.env` file in the project root directory and add your Firebase configuration details.
-6. Start the development server by running `npm start` or `yarn start`.
-7. Access the application by opening your web browser and navigating to `http://localhost:3000`.
+6. Start the development server by running `npm run dev` or `yarn run dev`.
+7. Access the application by opening your web browser and navigating to `http://localhost:5173`.
 
 ## Contribution Guidelines
 
