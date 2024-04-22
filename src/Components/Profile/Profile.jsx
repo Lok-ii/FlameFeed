@@ -14,6 +14,8 @@ import {
   setIsModalOpen,
   setUserPosts,
 } from "../../Redux/postSlice";
+import { FaComment } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -167,17 +169,29 @@ const Profile = () => {
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-wrap w-[100%] gap-y-0">
+                <div className="flex flex-wrap justify-center w-[100%] gap-y-0">
                   {userPosts.map((post) => {
                     return (
                       <div
-                        className={`w-[10rem] h-[10rem]`}
+                        className={`w-[15rem] h-[15rem] group relative transition-all duration-300 ease-in-out`}
                         key={post.id}
                         onClick={() => {
                           dispatch(setIsModalOpen(true));
                           dispatch(setExpandedPost(post));
                         }}
                       >
+                        <div className="absolute top-0 left-0 w-full h-full bg-lightBlack flex opacity-0 group-hover:opacity-100 items-center justify-center gap-8 transition-all duration-300 ease-in-out">
+                          <div className="flex flex-row gap-2 items-center">
+                            <FaHeart className=" w-[24px] h-[24px]" />
+                            {post.likes.length > 0 ? post.likes.length : 0}
+                          </div>
+                          <div className="flex flex-row gap-2 items-center">
+                            <FaComment className=" w-[24px] h-[24px]" />
+                            {post.comments.length > 0
+                              ? post.comments.length
+                              : 0}
+                          </div>
+                        </div>
                         <img
                           src={post.media}
                           className="w-full h-full object-cover"

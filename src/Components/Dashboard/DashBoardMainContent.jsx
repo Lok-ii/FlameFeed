@@ -7,8 +7,8 @@ import Post from "./Post";
 import { useSelector } from "react-redux";
 
 const DashBoardMainContent = () => {
-  const { user } = useSelector(store => store.auth)
-  const {allPosts } = useSelector(store => store.post);
+  const { user } = useSelector((store) => store.auth);
+  const { allPosts } = useSelector((store) => store.post);
 
   return (
     <div className="w-[85%] flex gap-8">
@@ -18,8 +18,12 @@ const DashBoardMainContent = () => {
             tabbed={false}
             slidesToScroll={4}
             slidesToShow={8}
-            renderCenterLeftControls={({previousSlide}) => <BsArrowLeftCircleFill onClick={previousSlide} />}
-            renderCenterRightControls={({nextSlide}) => <BsArrowRightCircleFill  onClick={nextSlide} />}
+            renderCenterLeftControls={({ previousSlide }) => (
+              <BsArrowLeftCircleFill onClick={previousSlide} />
+            )}
+            renderCenterRightControls={({ nextSlide }) => (
+              <BsArrowRightCircleFill onClick={nextSlide} />
+            )}
             className="w-[100%]"
           >
             <StoryTile />
@@ -39,15 +43,20 @@ const DashBoardMainContent = () => {
           </Carousel>
         </div>
         <div className="w-[65%] h-[3000px] py-8 flex flex-col items-center gap-8">
-          {
-            allPosts && allPosts.map((post) => {
-              if(post.user === user.uid || user.following.includes(post.user)){
-                return <Post key={post.id} post={post} type={"NORMAL"} />
-              }else{
+          {allPosts.length > 0 ? (
+            allPosts.map((post) => {
+              if (
+                post.user === user.uid ||
+                user.following.includes(post.user)
+              ) {
+                return <Post key={post.id} post={post} type={"NORMAL"} />;
+              } else {
                 return null;
               }
             })
-          }
+          ) : (
+            <p>You have no friends, Go make some.</p>
+          )}
         </div>
       </div>
       <DashBoardRightSideBar />

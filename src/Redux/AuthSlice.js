@@ -35,6 +35,12 @@ const initialState = {
   authImages: [screenshot1, screenshot2, screenshot3, screenshot4],
   authPageImage: screenshot1,
   imageIndex: 0,
+  emailError: "",
+  nameError: "",
+  usernameError: "",
+  passwordError: "",
+  signupDisabled: true,
+  randomUser: [],
   // file: "",
 };
 
@@ -65,6 +71,9 @@ const authSlice = createSlice({
     handlePhoto: (state, action) => {
       state.photoURL = action.payload;
     },
+    setRandomUsers: (state, action) => {
+      state.randomUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,6 +89,20 @@ const authSlice = createSlice({
       })
       .addCase(userAuthentication.rejected, (state, action) => {
         state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(verifyUserDeatils.fulfilled, (state, action) => {
+        if (action.payload.type === "email") {
+          state.emailError = action.payload.error;
+        } else if (action.payload.type === "username") {
+          state.usernameError = action.payload.error;
+        } else if (action.payload.type === "password") {
+          state.passwordError = action.payload.error;
+        } else if (action.payload.type === "displayName") {
+          state.nameError = action.payload.error;
+        }
+      })
+      .addCase(verifyUserDeatils.rejected, (state, action) => {
         state.error = action.payload;
       });
   },
@@ -145,7 +168,7 @@ export const userAuthentication = createAsyncThunk(
                 ...user,
                 id: nanoid(),
                 displayName: fullName,
-                username,
+                username: username.toLowerCase(),
                 followers: [],
                 following: [],
                 posts: [],
@@ -217,21 +240,20 @@ export const userAuthentication = createAsyncThunk(
           posts = allPosts.map((post) => {
             if (post.userName === storedUser.username) {
               comments = post.comments.map((comment) => {
-                
-                  commentLikes = comment.commentLikes.map((like) => {
-                    if (like === storedUser.username) {
-                      return username;
-                    }
-                    return like;
-                  });
+                commentLikes = comment.commentLikes.map((like) => {
+                  if (like === storedUser.username) {
+                    return username;
+                  }
+                  return like;
+                });
                 if (comment.username === storedUser.username) {
                   return {
-                   ...comment,
+                    ...comment,
                     photoURL: photoURL,
                     username: username,
-                    commentLikes
+                    commentLikes,
                   };
-                }else{
+                } else {
                   return comment;
                 }
               });
@@ -239,12 +261,12 @@ export const userAuthentication = createAsyncThunk(
                 ...post,
                 photoURL: photoURL,
                 userName: username,
-                comments
+                comments,
               };
             } else {
               return {
                 ...post,
-                comments
+                comments,
               };
             }
           });
@@ -273,6 +295,86 @@ export const userAuthentication = createAsyncThunk(
   }
 );
 
+export const verifyUserDeatils = createAsyncThunk(
+  "auth/verifyUserDeatils",
+  async ({ type, dispatch, username, displayName, email, password }) => {
+    try {
+      let error = "";
+      let usersRef;
+      let q;
+      let querySnapshot;
+      let isUserExist = "";
+      switch (type) {
+        case "email":
+          usersRef = await collection(db, "users");
+          q = await query(
+            usersRef,
+            where("email", "==", `${email.toLowerCase()}`)
+          );
+
+          querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            isUserExist = doc.data();
+          });
+          if (isUserExist !== "") {
+            error = "Email already exists";
+            console.log(error);
+          } else {
+            error = "";
+            console.log(error);
+          }
+          break;
+        case "username":
+          usersRef = await collection(db, "users");
+          q = await query(
+            usersRef,
+            where("username", "==", `${username.toLowerCase()}`)
+          );
+
+          querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            isUserExist = doc.data();
+          });
+          if (isUserExist !== "") {
+            error = "Username already exists";
+            console.log(error);
+          } else {
+            error = "";
+            console.log(error);
+          }
+          break;
+        case "displayName":
+          if (displayName.length < 3) {
+            error = "Name should be atleast 3 characters long";
+          } else {
+            error = "";
+          }
+          break;
+        case "password":
+          if (
+            password.length > 6 &&
+            password.charAt(0) >= "A" &&
+            password.charAt(0) <= "Z" &&
+            password.match(/[.@#%&]/).length > 0
+          ) {
+            error = "";
+          } else {
+            error =
+              "Password should be atleast 6 characters long, first character must be captial and should contain atleast one special character(.@#%&)";
+          }
+          break;
+        default:
+          throw new Error("Invalid authentication type");
+      }
+      return { type, error };
+    } catch (error) {
+      console.log(error);
+      dispatch(setError(error.message.slice(10)));
+      return error.message.slice(10);
+    }
+  }
+);
+
 export const {
   setUser,
   setError,
@@ -282,6 +384,7 @@ export const {
   handlePhoto,
   setMedia,
   setMediaAttached,
+  setRandomUsers,
 } = authSlice.actions;
 
 export default authSlice.reducer;

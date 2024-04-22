@@ -11,7 +11,7 @@ const AuthFooter = () => {
       <p href="" className="hover:underline">Privacy</p>
       <p href="" className="hover:underline">Terms</p>
       <p href="" className="hover:underline">Locations</p>
-      <p href="" className="hover:underline">Instagram Lite</p>
+      <p href="" className="hover:underline">FlameFeed Lite</p>
       <p href="" className="hover:underline">Threads</p>
       <p href="" className="hover:underline">Contact uploading and non-users</p>
       <p href="" className="hover:underline">Meta Verified</p>
@@ -71,7 +71,7 @@ const AuthFooter = () => {
         <option value="uk">Українська</option>
       </select>
 
-      <p className="copyright">© 2024 Instagram from Meta</p>
+      <p className="copyright">© 2024 FlameFeed from Meta</p>
     </div>
   );
 };

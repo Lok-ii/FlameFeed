@@ -45,7 +45,13 @@ const Login = () => {
       } flex flex-col gap-4 py-4`}
     >
       <div className="login border border-gray-300 w-[100%] flex flex-col gap-4 items-center py-8">
-        <InstaLogo />
+        {/* <InstaLogo /> */}
+        <p
+          className="text-[2rem] font-semibold"
+          style={{ fontFamily: "Billabong W00 Regular" }}
+        >
+          FlameFeed
+        </p>
         <form
           action=""
           className="flex flex-col items-center gap-2 w-[90%] text-xs"

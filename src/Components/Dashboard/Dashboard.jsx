@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import DashboardSidebar from "./DashboardSidebar";
-import { setUser, handlePhoto } from "../../Redux/AuthSlice";
+import { setUser, handlePhoto, setRandomUsers } from "../../Redux/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggleSetting } from "../../Redux/SidebarSlice";
 import { collection, getDocs } from "firebase/firestore";
@@ -9,11 +9,13 @@ import { setAllPosts, setIsLiked } from "../../Redux/postSlice";
 import { db } from "../firebase";
 import dayjs from "dayjs";
 import PostModal from "./PostModal";
+import CreatePost from "../CreatePost/CreatePost";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toggleSettings } = useSelector((store) => store.sidebar);
+  const { isModalOpen } = useSelector((store) => store.post);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -44,6 +46,16 @@ const Dashboard = () => {
       dispatch(setAllPosts(posts));
     };
     getPosts();
+
+    const getUsers = async () => {
+      const userCollection = await getDocs(collection(db, "users"));
+      let users = [];
+      userCollection.forEach((user) => {
+        users.push(user.data());
+      });
+      dispatch(setRandomUsers(users));
+    };
+    getUsers();
   }, [dispatch, navigate]);
   return (
     <div
@@ -62,7 +74,8 @@ const Dashboard = () => {
     >
       <DashboardSidebar />
       <Outlet />
-      <PostModal />
+      {isModalOpen && <PostModal />}
+      <CreatePost />
     </div>
   );
 };

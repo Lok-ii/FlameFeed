@@ -36,7 +36,7 @@ const DashboardSidebar = () => {
   const { collapsed, isSearchOpen, isMessageOpen } = useSelector(
     (state) => state.sidebar
   );
-  const { user } = useSelector(store => store.auth)
+  const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
   return (
@@ -52,7 +52,7 @@ const DashboardSidebar = () => {
           gap: "2rem",
           zIndex: "200",
           width: "15%",
-          position: "fixed"
+          position: "fixed",
         }}
         collapsed={collapsed}
         toggled={toggled}
@@ -75,7 +75,13 @@ const DashboardSidebar = () => {
                 dispatch(collapseAll());
               }}
             >
-              <InstaLogo />
+              {/* <InstaLogo /> */}
+              <p
+                className="text-[2rem] font-semibold"
+                style={{ fontFamily: "Billabong W00 Regular" }}
+              >
+                FlameFeed
+              </p>
             </MenuItem>
           ) : (
             <MenuItem
@@ -85,7 +91,13 @@ const DashboardSidebar = () => {
                 dispatch(collapseAll());
               }}
             >
-              <InstaLogo />
+              {/* <InstaLogo /> */}
+              <p
+                className="text-[2rem] font-semibold pt-4 pl-2"
+                style={{ fontFamily: "Billabong W00 Regular" }}
+              >
+                FlameFeed
+              </p>
             </MenuItem>
           )}
           <MenuItem
@@ -167,7 +179,7 @@ const DashboardSidebar = () => {
             Threads{" "}
           </MenuItem>
           <MenuItem
-          className="moreSettings"
+            className="moreSettings"
             icon={<More />}
             onClick={() => {
               dispatch(collapseAll());
