@@ -47,7 +47,7 @@ const Login = () => {
           {error && (
             <Alert
               icon={<ImCross className="text-[#F44336] text-xs ml-2" />}
-              className="rounded-none border-l-4 border-[#F44336] bg-[#F44336]/10 font-medium text-[#000] flex items-center justify-center gap-4 "
+              className="rounded-none border-l-4 border-[#F44336] bg-[#F44336]/10 font-medium text-white flex items-center justify-center gap-4 "
             >
               {error}
             </Alert>
