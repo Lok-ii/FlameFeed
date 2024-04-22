@@ -4,23 +4,14 @@ import Comment from "../../assets/icons/Comment.jsx";
 import Share from "../../assets/icons/Share.jsx";
 import Saved from "../../assets/icons/Saved.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import UseAnimations from "react-useanimations";
-import loading from "react-useanimations/lib/loading";
 import { Link } from "react-router-dom";
-import {
-  createPost,
-  setIsLiked,
-  setIsLoading,
-  setExpandedPost,
-  setIsModalOpen
-} from "../../Redux/postSlice.js";
+import { createPost, setIsLiked } from "../../Redux/postSlice.js";
 import { LuHeart } from "react-icons/lu";
 import dayjs from "dayjs";
-import { useRef } from "react";
+import LikeAndComment from "./LikeAndComment.jsx";
 
 const Post = ({ post, type }) => {
   const dispatch = useDispatch();
-  const commentRef = useRef("");
   const postTime =
     dayjs() - dayjs(post.createdAt) < 60000
       ? `${Math.floor((dayjs() - dayjs(post.createdAt)) / 1000)} s`
@@ -33,64 +24,90 @@ const Post = ({ post, type }) => {
         )} d`;
 
   const { user } = useSelector((store) => store.auth);
-  const { isLiked, allPosts, isLoading, isModalOpen } = useSelector((store) => store.post);
+  const { isLiked, allPosts } = useSelector((store) => store.post);
   return (
     <>
-      <div className="avoid border w-[90%] flex flex-col gap-2 py-2">
-        <div className="w-full flex items-center  justify-between px-2">
-          <div className="flex items-center gap-2">
+      <div className="avoid border w-[100%] flex flex-col gap-2 py-2">
+        <div className="avoid w-full flex items-center  justify-between px-2 border-b-[1px] border-gray py-2">
+          <div className="avoid flex items-center gap-2">
             <Link to={`/dashboard/profile/${post.userName}`}>
-              <div className="w-10 h-10 cursor-pointer rounded-[50%]">
+              <div className="avoid w-10 h-10 cursor-pointer rounded-[50%]">
                 <img
-                  className="w-full h-full rounded-[50%] object-cover"
+                  className="avoid w-full h-full rounded-[50%] object-cover"
                   src={post.photoURL}
                   alt=""
                 />
               </div>
             </Link>
             <Link to={`/dashboard/profile/${post.userName}`}>
-              <p className="text-xs font-semibold cursor-pointer">
+              <p className="avoid text-xs font-semibold cursor-pointer">
                 {post.userName}
               </p>
             </Link>
-            <p className="font-semibold text-xs text-textGray"> • {postTime}</p>
+            <p className="avoid font-semibold text-xs text-textGray">
+              {" "}
+              • {postTime}
+            </p>
           </div>
-          <BsThreeDots className="cursor-pointer" />
+          <BsThreeDots className="avoid cursor-pointer" />
         </div>
         {type === "NORMAL" ? (
-          <div className="w-full h-[80vh] cursor-pointer rounded-md">
+          <div className="avoid w-full h-[80vh] cursor-pointer rounded-md">
             <img
-              className="w-full h-full object-contain object-center rounded-md"
+              className="avoid w-full h-full object-contain object-center rounded-md"
               src={post.media}
               alt=""
             />
           </div>
         ) : (
-          <div className="w-full h-[74.5vh] cursor-pointer rounded-md shadow-postShadow overflow-y-scroll flex flex-col gap-4">
-            {post.comments &&
-              post.comments.map((comment) => {
-                return (
-                  <div key={comment.id} className="flex gap-2">
+          <div className="avoid flex flex-col gap-4 w-full overflow-y-auto no-scrollbar  h-[64.5vh]">
+            <div className="avoid  px-2">
+              <div className="avoid flex items-center gap-2">
+                <Link to={`/dashboard/profile/${post.userName}`}>
+                  <div className="avoid w-10 h-10 cursor-pointer rounded-[50%]">
                     <img
-                      src={`${comment.photoURL}`}
+                      className="avoid w-full h-full rounded-[50%] object-cover"
+                      src={post.photoURL}
                       alt=""
-                      className="h-10 w-10 rounded-full object-cover"
                     />
-                    <div className="text-sm">
-                      <span>{comment.username}</span>
-                      <br />
-                      <span>{comment.content}</span>
-                    </div>
                   </div>
-                );
-              })}
+                </Link>
+                <Link to={`/dashboard/profile/${post.userName}`}>
+                  <p className="avoid text-md font-semibold cursor-pointer">
+                    {post.userName}
+                  </p>
+                </Link>
+                <p className="avoid text-md"> {post.caption}</p>
+              </div>
+            </div>
+            <div className="avoid w-full p-2 cursor-pointer rounded-md flex flex-col gap-4">
+              {post.comments &&
+                post.comments.map((comment) => {
+                  return (
+                    <div key={comment.id} className="avoid flex gap-2">
+                      <img
+                        src={`${comment.photoURL}`}
+                        alt=""
+                        className="avoid h-10 w-10 rounded-full object-cover"
+                      />
+                      <div className="avoid flex gap-1 pt-2 text-sm">
+                        <span className="avoid font-medium">
+                          {comment.username}
+                        </span>
+                        <br />
+                        <span className="avoid">{comment.content}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         )}
-        <div className="w-full py-2 px-2 flex justify-between">
-          <div className="flex gap-2 cursor-pointer">
+        <div className="avoid w-full py-2 px-2 flex justify-between">
+          <div className="avoid flex gap-2 cursor-pointer">
             {post.likes && (
               <LuHeart
-                className={`w-[24px] h-[24px] transition-all ${
+                className={`avoid w-[24px] h-[24px] transition-all ${
                   post.likes.includes(user.uid)
                     ? "fill-red-500 text-red-500"
                     : ""
@@ -116,77 +133,17 @@ const Post = ({ post, type }) => {
                 }}
               />
             )}
-            <Comment />
-            <Share />
+            <Comment className="avoid" />
+            <Share className="avoid" />
           </div>
-          <div className="w-6 cursor-pointer">
-            <Saved />
+          <div className="avoid w-6 cursor-pointer">
+            <Saved className="avoid" />
           </div>
         </div>
-        {type === "NORMAL" && (
-          <div className="flex flex-col px-2 gap-2 text-[0.8rem] font-semibold">
-            {post.likes && (
-              <p className=" cursor-pointer">{post.likes.length} likes</p>
-            )}
-            <div className="flex gap-2">
-              <p className=" cursor-pointer">{post.userName}</p>{" "}
-              <p className=" cursor-pointer">{post.caption}</p>
-            </div>
-            <div className="flex flex-col gap-2">
-              {post.comments &&
-                post.comments.map(
-                  (comment, idx) =>
-                    idx <= 1 && (
-                      <div key={comment.id} className="flex items-center gap-2">
-                        <div className="text-sm flex gap-2">
-                          <span>{comment.username}</span>
-                          <span>{comment.content.substr(0, 50)}...</span>
-                        </div>
-                      </div>
-                    )
-                )}
-            </div>
-            <p
-              className="text-textGray font-light cursor-pointer"
-              onClick={() => {
-                dispatch(setIsModalOpen(true));
-                dispatch(setExpandedPost(post));
-              }}
-            >
-              View all comments
-            </p>
-            <div className="flex items-center">
-              <input
-                type="text"
-                className="outline-none w-[90%] text-textGray font-light border-b-2 border-b-white bg-transparent cursor-pointer"
-                placeholder="Add a comment..."
-                ref={commentRef}
-              />
-              <button
-                className="w-[10%] text-bluePrimary cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(setIsLoading(true));
-                  dispatch(
-                    createPost({
-                      type: "COMMENT",
-                      storedUser: user,
-                      dispatch,
-                      post,
-                      allPosts,
-                      comment: commentRef.current.value,
-                    })
-                  );
-                }}
-              >
-                {isLoading ? (
-                  <UseAnimations animation={loading} size={14} />
-                ) : (
-                  "Post"
-                )}
-              </button>
-            </div>
-          </div>
+        {type === "NORMAL" ? (
+          <LikeAndComment post={post} type={"normal"} />
+        ) : (
+          <LikeAndComment post={post} type={"expanded"} />
         )}
       </div>
     </>

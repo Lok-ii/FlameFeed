@@ -7,32 +7,52 @@ const PostModal = () => {
   const dispatch = useDispatch();
   const { expandedPost, isModalOpen } = useSelector((store) => store.post);
   return (
-    <div className="w-[80vw] h-[80vh] fixed overflow-hidden hidden">
-      <Modal
-        title="Basic Modal"
-        open={isModalOpen}
-        okButtonProps={{ className: "hidden" }}
-        cancelButtonProps={{ className: "hidden" }}
-        className="w-[100%] h-[60vh]"
-        onCancel={() => dispatch(setIsModalOpen(false))}
-        width={"100%"}
-      >
+    // <Modal
+    //   title=""
+    //   open={isModalOpen}
+    //   okButtonProps={{ className: "hidden" }}
+    //   cancelButtonProps={{ className: "hidden" }}
+    //   className="overflow-hidden bg-black"
+    //   onCancel={() => dispatch(setIsModalOpen(false))}
+    //   width={"60%"}
+    //   style={{
+    //     overflow: "hidden",
+    //     backgroundColor: "black",
+    //     top: "0",
+    //     left: "0",
+    //     padding: '0',
+    //   }}
+    // >
+    <div
+      className={`w-[100%] h-[100vh] fixed top-0 left-0 items-center justify-center overflow-hidden ${
+        isModalOpen ? "flex" : "hidden"
+      } z-[999]`}
+      onClick={(e) => {
+        if (!e.target.classList.contains("avoid")) {
+          dispatch(setIsModalOpen(false));
+        }
+      }}
+    >
+      <div className="w-[80%] h-[90%] bg-black z-[1000]">
         <div className={`avoid w-[100%] h-[100%] flex`}>
           {console.log(expandedPost)}
-          <div className="avoid w-[65%] h-full flex items-center">
+          <div className="avoid w-[50%] h-full flex items-center">
             <img
               src={expandedPost.media}
               alt=""
-              className="avoid w-full h-full object-cover"
+              className="avoid w-full h-full"
             />
           </div>
-          <div className="avoid w-[35%] h-[100%]">
+          <div className="avoid w-[50%] h-[100%]">
             <Post post={expandedPost} type={"EXPANDED"} />
           </div>
         </div>
-      </Modal>
+      </div>
     </div>
   );
 };
+{
+  /* </Modal> */
+}
 
 export default PostModal;

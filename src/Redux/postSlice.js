@@ -210,6 +210,7 @@ export const createPost = createAsyncThunk(
               return p;
             }
           })
+          
           setDoc(doc(db, "posts", post.id), postData);
           break;
         default:
