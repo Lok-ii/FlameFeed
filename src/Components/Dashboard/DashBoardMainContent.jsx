@@ -4,18 +4,13 @@ import Carousel from "nuka-carousel";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import Post from "./Post";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase.js";
-import { setAllPosts } from "../../Redux/postSlice.js";
+import { useSelector } from "react-redux";
 import PostModal from "./PostModal.jsx";
-import { nanoid } from "nanoid";
 
 const DashBoardMainContent = () => {
   const { user } = useSelector(store => store.auth)
-  const {allPosts, isLiked } = useSelector(store => store.post);
-  const dispatch = useDispatch();
+  const {allPosts } = useSelector(store => store.post);
+  // const dispatch = useDispatch();
   // console.log(nanoid(8))
 
   // useEffect(() => {

@@ -1,17 +1,13 @@
 import { Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createPost,
-  setExpandedPost,
-  setIsModalOpen,
-} from "../../Redux/postSlice.js";
+import { setIsModalOpen } from "../../Redux/postSlice.js";
 import Post from "./Post.jsx";
 
 const PostModal = () => {
   const dispatch = useDispatch();
   const { expandedPost, isModalOpen } = useSelector((store) => store.post);
   return (
-    <div className="w-[80vw] h-[80vh]">
+    <div className="w-[80vw] h-[80vh] fixed overflow-hidden hidden">
       <Modal
         title="Basic Modal"
         open={isModalOpen}
@@ -19,6 +15,7 @@ const PostModal = () => {
         cancelButtonProps={{ className: "hidden" }}
         className="w-[100%] h-[60vh]"
         onCancel={() => dispatch(setIsModalOpen(false))}
+        width={"100%"}
       >
         <div className={`avoid w-[100%] h-[100%] flex`}>
           {console.log(expandedPost)}
