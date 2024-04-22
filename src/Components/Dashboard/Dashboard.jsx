@@ -8,23 +8,27 @@ import { collection, getDocs } from "firebase/firestore";
 import { setAllPosts, setIsLiked } from "../../Redux/postSlice";
 import { db } from "../firebase";
 import dayjs from "dayjs";
+import PostModal from "./PostModal";
 
 const Dashboard = () => {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { toggleSettings } = useSelector(store => store.sidebar)
-  const { allPosts } = useSelector(store => store.post);
-  
+  const { toggleSettings } = useSelector((store) => store.sidebar);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (storedUser !== null && storedUser !== undefined && Object.keys(storedUser).length > 0 && typeof storedUser !== "string") {
+    if (
+      storedUser !== null &&
+      storedUser !== undefined &&
+      Object.keys(storedUser).length > 0 &&
+      typeof storedUser !== "string"
+    ) {
       dispatch(setUser(storedUser));
       dispatch(handlePhoto(storedUser.photoURL));
-      dispatch(setIsLiked(storedUser.likedPosts))
-    }else if(storedUser === "Error (auth/invalid-credential)."){
+      dispatch(setIsLiked(storedUser.likedPosts));
+    } else if (storedUser === "Error (auth/invalid-credential).") {
       navigate("/");
-    }else{
+    } else {
       navigate("/");
     }
 
@@ -33,23 +37,32 @@ const Dashboard = () => {
       let posts = [];
       postCollection.forEach((post) => {
         posts.push(post.data());
-      })
+      });
       posts.sort((a, b) => {
-        return (dayjs(b.createdAt)) - (dayjs(a.createdAt));
-      })
+        return dayjs(b.createdAt) - dayjs(a.createdAt);
+      });
       dispatch(setAllPosts(posts));
-    }
+    };
     getPosts();
-
   }, [dispatch, navigate]);
   return (
-    <div className="dashboard relative flex w-[100%] items-start justify-between" onClick={(e) => {
-      if(!e.target.classList.contains("moreSettings") && e.target.className !== "ps-menu-label css-12w9als" && !e.target.classList.contains("sidebarIcons") && e.target.className !== "ps-menu-button" && toggleSettings === false){
-        dispatch(setToggleSetting(true));
-      }
-    }}>
+    <div
+      className="dashboard relative flex w-[100%] items-start justify-between"
+      onClick={(e) => {
+        if (
+          !e.target.classList.contains("moreSettings") &&
+          e.target.className !== "ps-menu-label css-12w9als" &&
+          !e.target.classList.contains("sidebarIcons") &&
+          e.target.className !== "ps-menu-button" &&
+          toggleSettings === false
+        ) {
+          dispatch(setToggleSetting(true));
+        }
+      }}
+    >
       <DashboardSidebar />
       <Outlet />
+      <PostModal />
     </div>
   );
 };

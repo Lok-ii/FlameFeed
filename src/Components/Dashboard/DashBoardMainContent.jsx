@@ -5,25 +5,10 @@ import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import Post from "./Post";
 import { useSelector } from "react-redux";
-import PostModal from "./PostModal.jsx";
 
 const DashBoardMainContent = () => {
   const { user } = useSelector(store => store.auth)
   const {allPosts } = useSelector(store => store.post);
-  // const dispatch = useDispatch();
-  // console.log(nanoid(8))
-
-  // useEffect(() => {
-  //     const fetchUser = async () => {
-  //       const posts = await getDocs(collection(db, "posts"));
-  //       let postsData = [];
-  //       posts.forEach((post) => {
-  //         postsData.push(post.data());
-  //       })
-  //       dispatch(setAllPosts(postsData));
-  //     }
-  //     fetchUser();
-  //   }, [isLiked]);
 
   return (
     <div className="w-[85%] flex gap-8">
@@ -65,7 +50,6 @@ const DashBoardMainContent = () => {
           }
         </div>
       </div>
-      <PostModal />
       <DashBoardRightSideBar />
     </div>
   );

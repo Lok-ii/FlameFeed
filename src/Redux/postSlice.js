@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { storage } from "../Components/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../Components/firebase";
@@ -19,7 +19,7 @@ const initialState = {
   allPosts: [],
   userPosts: [],
   isLoading: false,
-  isModalOpen : false,
+  isModalOpen: false,
 };
 
 const postSlice = createSlice({
@@ -104,7 +104,7 @@ export const createPost = createAsyncThunk(
       let postData;
       let postId;
       let posts = [];
-      let postUserData = {};
+      // let postUserData = {};
       let commentData = {};
       switch (type) {
         case "POSTS":
@@ -166,6 +166,7 @@ export const createPost = createAsyncThunk(
             ...post,
             likes: [...postLikes],
           };
+          dispatch(setExpandedPost(postData));
 
           posts = allPosts.map((p) => {
             if (p.id === post.id) {
@@ -198,19 +199,20 @@ export const createPost = createAsyncThunk(
             commentLikes: [],
           };
           postData = {
-           ...post,
+            ...post,
             comments: [commentData, ...post.comments],
           };
+          dispatch(setExpandedPost(postData));
 
           posts = [...allPosts];
-          posts = posts.map(p => {
-            if(p.id === post.id) {
+          posts = posts.map((p) => {
+            if (p.id === post.id) {
               return postData;
-            }else{
+            } else {
               return p;
             }
-          })
-          
+          });
+
           setDoc(doc(db, "posts", post.id), postData);
           break;
         default:
@@ -239,7 +241,7 @@ export const {
   setIsLoading,
   setExpandedPost,
   setIsModalOpen,
-  setUserPosts
+  setUserPosts,
 } = postSlice.actions;
 
 export default postSlice.reducer;

@@ -19,6 +19,7 @@
     "antd": "^5.15.3",
     "axios": "^1.6.8",
     "dayjs": "^1.11.10",
+    "emoji-picker-react": "^4.9.2",
     "firebase": "^10.8.1",
     "firebase-tools": "^13.5.1",
     "nanoid": "^5.0.6",

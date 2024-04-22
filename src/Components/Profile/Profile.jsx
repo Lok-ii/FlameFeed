@@ -6,11 +6,14 @@ import { LuContact } from "react-icons/lu";
 import cameraIcon from "../../assets/images/camera.png";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../Redux/AuthSlice";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { profileStats, setSearchedUser } from "../../Redux/profileSlice";
-import { setUserPosts } from "../../Redux/postSlice";
+import {
+  setExpandedPost,
+  setIsModalOpen,
+  setUserPosts,
+} from "../../Redux/postSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -144,7 +147,7 @@ const Profile = () => {
               <p>TAGGED</p>
             </div>
           </div>
-          {userPosts && (
+          {userPosts && Object.keys(user).length !== 0 && (
             <div
               className={`flex ${
                 user.posts.length === 0 ? "items-center" : ""
@@ -167,7 +170,14 @@ const Profile = () => {
                 <div className="flex flex-wrap w-[100%] gap-y-0">
                   {userPosts.map((post) => {
                     return (
-                      <div className={`w-[10rem] h-[10rem]`} key={post.id}>
+                      <div
+                        className={`w-[10rem] h-[10rem]`}
+                        key={post.id}
+                        onClick={() => {
+                          dispatch(setIsModalOpen(true));
+                          dispatch(setExpandedPost(post));
+                        }}
+                      >
                         <img
                           src={post.media}
                           className="w-full h-full object-cover"

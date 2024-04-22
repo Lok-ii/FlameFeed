@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   createPost,
   setExpandedPost,
@@ -9,10 +9,13 @@ import UseAnimations from "react-useanimations";
 import { useDispatch, useSelector } from "react-redux";
 import loading from "react-useanimations/lib/loading";
 import PropTypes from "prop-types";
+import EmojiPicker from "emoji-picker-react";
+import { BsEmojiSunglasses } from "react-icons/bs";
 
 const LikeAndComment = ({ post, type }) => {
   const commentRef = useRef("");
   const dispatch = useDispatch();
+  const [emoji, setEmoji] = useState(false);
   const { isLoading, allPosts } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.auth);
   return (
@@ -61,26 +64,49 @@ const LikeAndComment = ({ post, type }) => {
           placeholder="Add a comment..."
           ref={commentRef}
         />
-        <button
-          className="avoid w-[10%] text-bluePrimary cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault();
-            dispatch(setIsLoading(true));
-            dispatch(
-              createPost({
-                type: "COMMENT",
-                storedUser: user,
-                dispatch,
-                post,
-                allPosts,
-                comment: commentRef.current.value,
-              })
-            );
-            commentRef.current.value = "";
-          }}
-        >
-          {isLoading ? <UseAnimations animation={loading} size={14} /> : "Post"}
-        </button>
+        <div className="relative flex items-center gap-2">
+          <EmojiPicker
+            open={emoji}
+            theme="dark"
+            style={{ position: "absolute", bottom: "1.5rem", right: "0" }}
+            onEmojiClick={(emo) => {
+              const cursorPosition = commentRef.current.selectionStart;
+              commentRef.current.value =
+                commentRef.current.value.slice(0, cursorPosition) +
+                emo.emoji +
+                commentRef.current.value.slice(cursorPosition);
+              setEmoji(false);
+            }}
+          />
+          <BsEmojiSunglasses
+            className="cursor-pointer"
+            onClick={() => setEmoji(true)}
+          />
+          <button
+            className="avoid w-[10%] text-bluePrimary cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setIsLoading(true));
+              dispatch(
+                createPost({
+                  type: "COMMENT",
+                  storedUser: user,
+                  dispatch,
+                  post,
+                  allPosts,
+                  comment: commentRef.current.value,
+                })
+              );
+              commentRef.current.value = "";
+            }}
+          >
+            {isLoading ? (
+              <UseAnimations animation={loading} size={14} />
+            ) : (
+              "Post"
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
