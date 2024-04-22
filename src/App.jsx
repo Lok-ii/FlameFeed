@@ -8,10 +8,9 @@ import Dashboard from "./Components/Dashboard/Dashboard";
 import DashBoardMainContent from "./Components/Dashboard/DashBoardMainContent";
 import Profile from "./Components/Profile/Profile";
 import EditProfile from "./Components/Profile/EditProfile";
-import { Provider } from 'react-redux';
-import { store } from './Redux/Store';
+import { Provider } from "react-redux";
+import { store } from "./Redux/Store";
 import Messages from "./Components/Dashboard/Messages";
-import PostModal from "./Components/Dashboard/PostModal";
 
 function App() {
   const router = createBrowserRouter([
@@ -46,15 +45,15 @@ function App() {
           element: <Profile />,
         },
         {
-          path : "editprofile",
-          element: <EditProfile />
+          path: "editprofile",
+          element: <EditProfile />,
         },
         {
           path: "messages",
-          element: <Messages />
+          element: <Messages />,
         },
       ],
-    }
+    },
   ]);
 
   return (

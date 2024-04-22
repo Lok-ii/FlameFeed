@@ -28,13 +28,13 @@ const AuthPage = () => {
 
   return (
     <>
-      <div className="authPage w-[60%] flex gap-8 items-start justify-center pt-4">
-        <div className="authImageContainer relative">
+      <div className="authPage w-full md:w-[60%] flex flex-col md:flex-row gap-8 items-center md:items-start justify-center pt-4">
+        <div className="authImageContainer hidden md:flex relative md:w-auto w-[50%]">
           <img src={authImage} alt="" className="authImage" />
           <img
             src={authPageImage}
             alt=""
-            className="changingImage absolute right-[3.7rem] top-6"
+            className="changingImage md:w-auto w-[54%] absolute top-[0.5rem] left-[33.5%] md:right-[3.7rem] md:top-6"
           />
         </div>
         <Outlet />

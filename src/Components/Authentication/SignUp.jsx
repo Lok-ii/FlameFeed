@@ -29,7 +29,7 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="w-[25%] flex flex-col items-center gap-4 py-8">
+      <div className="w-[80%] md:w-[50%] lg:w-[40%] xl:w-[25%] flex flex-col items-center gap-4 py-8">
         <div className="signUp border border-gray-300 w-[100%] flex flex-col gap-4 items-center py-8">
           <InstaLogo />
           <p className="signupText text-sm text-[#737373] font-medium w-[70%] text-center ">
