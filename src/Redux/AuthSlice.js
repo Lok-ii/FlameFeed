@@ -266,6 +266,7 @@ export const userAuthentication = createAsyncThunk(
       return newUserData;
     } catch (error) {
       console.error(error.code, error.message);
+      dispatch(setLoadingState(false));
       dispatch(setError(error.message.slice(10)));
       return error.message.slice(10);
     }
