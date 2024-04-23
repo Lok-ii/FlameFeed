@@ -1,4 +1,3 @@
-import React from "react";
 import profile from "../../assets/images/profile.avif";
 import { LuDot } from "react-icons/lu";
 

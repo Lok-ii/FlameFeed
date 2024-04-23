@@ -4,7 +4,7 @@ const Notifications = () => {
     <svg
       aria-label="Notifications"
       fill="currentColor"
-      className="sidebarIcons"
+      className="sidebarIcons hover:scale-[1.1] md:hover:scale-[1] cursor-pointer"
       height="24"
       role="img"
       viewBox="0 0 24 24"

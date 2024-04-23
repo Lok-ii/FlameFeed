@@ -1,4 +1,4 @@
-import InstaLogo from "../../assets/icons/InstaLogo";
+
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { useState } from "react";
 import Explore from "../../assets/icons/Explore";
@@ -16,9 +16,9 @@ import { AiFillInstagram } from "react-icons/ai";
 import Drawer from "react-modern-drawer";
 //import styles 👇
 import "react-modern-drawer/dist/index.css";
-import SearchDrawer from "./SearchDrawer";
+import SearchDrawer from "../Search/SearchDrawer";
 import { Link } from "react-router-dom";
-import MessageDrawer from "./MessageDrawer";
+import MessageDrawer from "../Messages/MessageDrawer";
 import Setting from "./Setting";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -40,7 +40,7 @@ const DashboardSidebar = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="h-[100vh] w-[15%] relative overflow-hidden bg-transparent">
+    <div className="h-[100vh] w-0 md:w-[15%] relative overflow-hidden bg-transparent">
       <Sidebar
         className="sidebar"
         rootStyles={{

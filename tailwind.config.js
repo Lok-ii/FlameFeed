@@ -18,6 +18,14 @@ export default {
         postShadow: "0 0 0 1px gray",
       },
     },
+    screens: {
+      "320": "320px",
+      "480": "480px",
+      "768": "768px",
+      "1024": "1024px",
+      "1280": "1280px",
+      "1440": "1440px",
+    },
   },
   plugins: [],
 };

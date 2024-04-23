@@ -40,7 +40,6 @@ const initialState = {
   usernameError: "",
   passwordError: "",
   signupDisabled: true,
-  randomUser: [],
   // file: "",
 };
 
@@ -70,9 +69,6 @@ const authSlice = createSlice({
     },
     handlePhoto: (state, action) => {
       state.photoURL = action.payload;
-    },
-    setRandomUsers: (state, action) => {
-      state.randomUser = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -271,11 +267,9 @@ export const userAuthentication = createAsyncThunk(
             }
           });
           dispatch(setAllPosts(posts));
-          console.log("properly working");
           posts.forEach((post) => {
             setDoc(doc(db, "posts", post.id), post);
           });
-          console.log("properly working");
 
           if (Object.keys(newUserData).length !== 0) {
             setDoc(doc(db, "users", newUserData.uid), newUserData);
@@ -318,10 +312,8 @@ export const verifyUserDeatils = createAsyncThunk(
           });
           if (isUserExist !== "") {
             error = "Email already exists";
-            console.log(error);
           } else {
             error = "";
-            console.log(error);
           }
           break;
         case "username":
@@ -337,10 +329,8 @@ export const verifyUserDeatils = createAsyncThunk(
           });
           if (isUserExist !== "") {
             error = "Username already exists";
-            console.log(error);
           } else {
             error = "";
-            console.log(error);
           }
           break;
         case "displayName":
@@ -384,7 +374,6 @@ export const {
   handlePhoto,
   setMedia,
   setMediaAttached,
-  setRandomUsers,
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,10 +1,10 @@
-import React from "react";
+
 
 const Search = () => {
   return (
     <svg
       aria-label="Search"
-      className="sidebarIcons"
+      className="sidebarIcons hover:scale-[1.1] md:hover:scale-[1] cursor-pointer"
       fill="currentColor"
       height="24"
       role="img"

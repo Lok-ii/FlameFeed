@@ -1,24 +1,51 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { profileStats } from "../../Redux/profileSlice";
 
-const Suggested = ({ user }) => {
+const Suggested = ({ suggested }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.auth);
   return (
     <div className="currentUser w-full flex items-center justify-between">
       <div className="userProfile flex items-center gap-4">
-        <img src={user.photoURL} className="w-[2rem] h-[2rem] rounded-[50%]" alt="" />
+        <Link to={`/dashboard/profile/${suggested.username}`}>
+          <img
+            src={suggested.photoURL}
+            className="w-[2rem] h-[2rem] rounded-[50%]"
+            alt=""
+          />
+        </Link>
         <div className="userName flex flex-col">
-          <h2 className="font-semibold text-sm">{user.username}</h2>
+          <Link to={`/dashboard/profile/${suggested.username}`}>
+            <h2 className="font-semibold text-sm">{suggested.username}</h2>
+          </Link>
           <p className="text-xs">Suggested for you</p>
         </div>
       </div>
-      <p className="font-semibold text-blue-400 text-xs cursor-pointer">
-        Follow
+      <p
+        className="font-semibold text-blue-400 text-xs cursor-pointer"
+        onClick={() => {
+          dispatch(
+            profileStats({
+              type: "FOLLOW",
+              loggedUser: user,
+              searchedUser: suggested,
+              dispatch,
+            })
+          );
+        }}
+      >
+        {suggested.followers && !suggested.followers.includes(user.uid)
+          ? "Follow"
+          : "Unfollow"}
       </p>
     </div>
   );
 };
 
 Suggested.propTypes = {
-  user: PropTypes.object.isRequired,
+  suggested: PropTypes.object.isRequired,
 };
 
 export default Suggested;

@@ -3,7 +3,7 @@ import StoryTile from "./StoryTile";
 import Carousel from "nuka-carousel";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { BsArrowRightCircleFill } from "react-icons/bs";
-import Post from "./Post";
+import Post from "../Post/Post";
 import { useSelector } from "react-redux";
 
 const DashBoardMainContent = () => {
@@ -11,12 +11,12 @@ const DashBoardMainContent = () => {
   const { allPosts } = useSelector((store) => store.post);
 
   return (
-    <div className="w-[85%] flex gap-8">
-      <div className="w-[60%] flex flex-col items-end">
-        <div className="w-[65%] h-20 flex items-start gap-2 overflow-hidden">
+    <div className="w-full md:w-[70%] xl:w-[85%] flex xl:gap-8">
+      <div className="w-full lg:w-[60%] xl:w-[60%] flex flex-col items-center xl:items-end">
+        <div className="w-[90%] lg:w-[90%] xl:w-[65%] h-20 flex md:flex-row flex-col items-center md:items-start gap-2 overflow-hidden">
           <Carousel
             tabbed={false}
-            slidesToScroll={4}
+            slidesToScroll={1}
             slidesToShow={8}
             renderCenterLeftControls={({ previousSlide }) => (
               <BsArrowLeftCircleFill onClick={previousSlide} />
@@ -42,7 +42,7 @@ const DashBoardMainContent = () => {
             <StoryTile />
           </Carousel>
         </div>
-        <div className="w-[65%] h-[3000px] py-8 flex flex-col items-center gap-8">
+        <div className="w-[90%] lg:w-[90%] xl:w-[65%] py-8 flex flex-col items-center gap-8">
           {allPosts.length > 0 ? (
             allPosts.map((post) => {
               if (

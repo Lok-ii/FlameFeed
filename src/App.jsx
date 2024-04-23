@@ -10,7 +10,7 @@ import Profile from "./Components/Profile/Profile";
 import EditProfile from "./Components/Profile/EditProfile";
 import { Provider } from "react-redux";
 import { store } from "./Redux/Store";
-import Messages from "./Components/Dashboard/Messages";
+import Messages from "./Components/Messages/Messages";
 
 function App() {
   const router = createBrowserRouter([

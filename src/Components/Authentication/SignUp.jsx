@@ -1,4 +1,3 @@
-import InstaLogo from "../../assets/icons/InstaLogo";
 import Or from "./Or";
 // import LoginWithFacebook from "./LoginWithFacebook";
 import { AiFillFacebook } from "react-icons/ai";
@@ -55,7 +54,6 @@ export default function SignUp() {
     <>
       <div className="w-[80%] md:w-[50%] lg:w-[40%] xl:w-[25%] flex flex-col items-center gap-4 py-8">
         <div className="signUp border border-gray-300 w-[100%] flex flex-col gap-4 items-center py-8">
-          {/* <InstaLogo /> */}
           <p
             className="text-[2rem] font-semibold"
             style={{ fontFamily: "Billabong W00 Regular" }}

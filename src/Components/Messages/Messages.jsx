@@ -1,4 +1,3 @@
-import React from 'react'
 import BigMessage from '../../assets/icons/BigMessage';
 
 const Messages = () => {

@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const DashBoardRightSideBar = () => {
-  const { user, randomUser } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
+  const { randomUser } = useSelector((state) => state.profile);
   return (
-    <div className="w-[40%] flex flex-col gap-8 pr-48 py-8">
+    <div className="md:w-[40%] hidden lg:flex flex-col gap-8 lg:pr-4 xl:pr-48 py-8">
       <div className="currentUser flex items-center justify-between">
         <div className="userProfile flex items-center gap-4">
           <Link to={`/dashboard/profile/${user.username}`}>
@@ -37,7 +38,7 @@ const DashBoardRightSideBar = () => {
           {randomUser &&
             randomUser.map((random, idx) => {
               return idx < 10 && random.username !== user.username ? (
-                <Suggested key={"random" + random.uid} user={random} />
+                <Suggested key={"random" + random.uid} suggested={random} />
               ) : null;
             })}
         </div>

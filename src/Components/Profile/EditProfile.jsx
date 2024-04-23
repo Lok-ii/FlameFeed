@@ -1,11 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-// import profileImg from "../../assets/images/profile.avif";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  userAuthentication,
-  handlePhoto,
-  setUser,
-} from "../../Redux/AuthSlice";
+import { userAuthentication, handlePhoto } from "../../Redux/AuthSlice";
 
 const EditProfile = () => {
   const [file, setFile] = useState(null);
@@ -17,12 +12,11 @@ const EditProfile = () => {
   const { allPosts } = useSelector((store) => store.post);
   const dispatch = useDispatch();
 
-  
   return (
-    <div className="w-[70%] px-40 flex flex-col items-center py-8 gap-8">
+    <div className="w-full px-4 md:w-[100%] md:px-40 mb-16 flex flex-col items-center py-8 gap-8">
       <p className="self-start">Edit Profile</p>
       <div className="flex flex-col w-full gap-12">
-        <div className="flex w-[80%] bg-[#262626] p-6 rounded-3xl items-center justify-between">
+        <div className="flex w-full md:w-[80%] bg-[#262626] p-6 rounded-3xl items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="">
               <label htmlFor="profilePhoto" className=" cursor-pointer">
@@ -58,7 +52,7 @@ const EditProfile = () => {
             Change photo
           </label>
         </div>
-        <div className="flex flex-col gap-2 w-[80%]">
+        <div className="flex flex-col gap-2 w-full md:w-[80%]">
           <p>Full Name</p>
           <input
             className="p-4 bg-transparent border rounded-lg"
@@ -68,7 +62,7 @@ const EditProfile = () => {
             defaultValue={user.displayName}
           />
         </div>
-        <div className="flex flex-col gap-2 w-[80%]">
+        <div className="flex flex-col gap-2 w-full md:w-[80%]">
           <p>Username</p>
           <input
             className="p-4 bg-transparent border rounded-lg"
@@ -78,7 +72,7 @@ const EditProfile = () => {
             defaultValue={user.username}
           />
         </div>
-        <div className="flex flex-col gap-2 w-[80%]">
+        <div className="flex flex-col gap-2 w-full md:w-[80%]">
           <p>Bio</p>
           <input
             className="p-4 bg-transparent border rounded-lg"
@@ -88,7 +82,7 @@ const EditProfile = () => {
             defaultValue={user.bio}
           />
         </div>
-        <div className="flex flex-col gap-2 w-[80%]">
+        <div className="flex flex-col gap-2 w-full md:w-[80%]">
           <p>Gender</p>
           <select
             className="p-4 bg-transparent border rounded-lg"
@@ -109,7 +103,7 @@ const EditProfile = () => {
           </select>
         </div>
       </div>
-      <div className="w-[60%] flex items-center justify-end">
+      <div className="w-full md:w-[60%] flex items-center justify-center md:justify-end">
         <button
           className="bg-blue-500 px-24 py-3 rounded-lg text-sm font-semibold"
           onClick={async () => {
@@ -126,7 +120,7 @@ const EditProfile = () => {
                 photoURL: photoURL,
                 file: file,
                 storedUser: user,
-                allPosts
+                allPosts,
               })
             );
             setFile(null);

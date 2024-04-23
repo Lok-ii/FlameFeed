@@ -1,10 +1,9 @@
-import React from "react";
 
 const Home = () => {
   return (
     <svg
       aria-label="Home"
-      className="sidebarIcons"
+      className="sidebarIcons hover:scale-[1.1] md:hover:scale-[1] cursor-pointer"
       fill="currentColor"
       height="24"
       role="img"

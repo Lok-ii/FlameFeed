@@ -32,7 +32,6 @@ const Profile = () => {
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
         dispatch(setSearchedUser(doc.data()));
       });
     };
@@ -49,9 +48,9 @@ const Profile = () => {
   }, [allPosts, dispatch, params.username, user]);
   return (
     user && (
-      <div className="profile flex-grow w-[70%] px-20 py-10 flex items-center flex-col gap-16">
-        <div className="flex items-center gap-16">
-          <div className="profileImageContainer rounded-[50%] h-[9.375rem] w-[9.375rem]">
+      <div className="profile flex-grow w-full md:w-[70%] px-2 md:px-20 py-10 flex items-center flex-col gap-16">
+        <div className="flex items-start md:items-center gap-4 md:gap-16">
+          <div className="profileImageContainer rounded-[50%] w-[4rem] 320:h-[3.5rem] h-[4rem] md:h-[9.375rem] md:w-[9.375rem]">
             <img
               className="profileImage object-cover w-full h-full rounded-[50%]"
               src={searchedUser.photoURL}
@@ -90,17 +89,17 @@ const Profile = () => {
                     </button>
                   )}
                   {params.username === user.username && (
-                    <button className="viewArchive cursor-pointer bg-[#363636] px-4 py-2 rounded-lg font-medium text-sm">
+                    <button className="viewArchive cursor-pointer hidden md:block bg-[#363636] px-4 py-2 rounded-lg font-medium text-sm">
                       VIew archive
                     </button>
                   )}
                 </div>
-                <div className="settingsIcon cursor-pointer">
+                <div className="settingsIcon hidden md:block cursor-pointer">
                   <Settings />
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-12 text-sm">
+            <div className="flex items-center gap-4 md:gap-12 text-sm">
               {searchedUser.posts && (
                 <p>
                   <span className="font-semibold">
@@ -126,7 +125,7 @@ const Profile = () => {
                 </p>
               )}
             </div>
-            <div>
+            <div className="w-full">
               <p className="font-semibold text-sm">
                 {searchedUser.displayName}
               </p>

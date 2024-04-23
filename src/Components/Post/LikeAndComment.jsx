@@ -57,12 +57,28 @@ const LikeAndComment = ({ post, type }) => {
           </p>
         </>
       )}
-      <div className="avoid flex items-center">
+      <form className="avoid flex items-center"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if(commentRef.current.value !== ""){dispatch(setIsLoading(true));
+              dispatch(
+                createPost({
+                  type: "COMMENT",
+                  storedUser: user,
+                  dispatch,
+                  post,
+                  allPosts,
+                  comment: commentRef.current.value,
+                })
+              );
+              commentRef.current.value = "";}
+            }}>
         <input
           type="text"
           className="avoid outline-none w-[90%] text-textGray font-light border-b-2 border-b-white bg-transparent cursor-pointer"
           placeholder="Add a comment..."
           ref={commentRef}
+          required
         />
         <div className="relative flex items-center gap-2">
           <EmojiPicker
@@ -80,25 +96,10 @@ const LikeAndComment = ({ post, type }) => {
           />
           <BsEmojiSunglasses
             className="cursor-pointer"
-            onClick={() => setEmoji(true)}
+            onClick={() => setEmoji(prev => !prev)}
           />
           <button
             className="avoid w-[10%] text-bluePrimary cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(setIsLoading(true));
-              dispatch(
-                createPost({
-                  type: "COMMENT",
-                  storedUser: user,
-                  dispatch,
-                  post,
-                  allPosts,
-                  comment: commentRef.current.value,
-                })
-              );
-              commentRef.current.value = "";
-            }}
           >
             {isLoading ? (
               <UseAnimations animation={loading} size={14} />
@@ -107,7 +108,7 @@ const LikeAndComment = ({ post, type }) => {
             )}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

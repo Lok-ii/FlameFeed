@@ -1,15 +1,17 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import DashboardSidebar from "./DashboardSidebar";
-import { setUser, handlePhoto, setRandomUsers } from "../../Redux/AuthSlice";
+import { setUser, handlePhoto } from "../../Redux/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggleSetting } from "../../Redux/SidebarSlice";
 import { collection, getDocs } from "firebase/firestore";
 import { setAllPosts, setIsLiked } from "../../Redux/postSlice";
 import { db } from "../firebase";
 import dayjs from "dayjs";
-import PostModal from "./PostModal";
+import PostModal from "../Post/PostModal";
 import CreatePost from "../CreatePost/CreatePost";
+import { setRandomUsers } from "../../Redux/profileSlice";
+import FooterNav from "../FooterNav/FooterNav";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -76,6 +78,7 @@ const Dashboard = () => {
       <Outlet />
       {isModalOpen && <PostModal />}
       <CreatePost />
+      <FooterNav  />
     </div>
   );
 };
