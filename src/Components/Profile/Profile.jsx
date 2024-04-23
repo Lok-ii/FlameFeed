@@ -50,7 +50,7 @@ const Profile = () => {
     user && (
       <div className="profile flex-grow w-full md:w-[70%] px-2 md:px-20 py-10 flex items-center flex-col gap-16">
         <div className="flex items-start md:items-center gap-4 md:gap-16">
-          <div className="profileImageContainer rounded-[50%] w-[4rem] 320:h-[3.5rem] h-[4rem] md:h-[9.375rem] md:w-[9.375rem]">
+          <div className="profileImageContainer rounded-[50%] w-[4rem] xs:h-[4rem] h-[3.5rem] md:h-[9.375rem] md:w-[9.375rem]">
             <img
               className="profileImage object-cover w-full h-full rounded-[50%]"
               src={searchedUser.photoURL}
