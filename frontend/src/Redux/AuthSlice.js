@@ -123,7 +123,7 @@ export const userAuthentication = createAsyncThunk(
               username: username.toLowerCase(),
               password,
               email: email.toLowerCase(),
-              photoURL: profile,
+              photoURL: "https://flamefeed.onrender.com/uploads/profile.avif",
               displayName: fullName,
             });
             dispatch(
