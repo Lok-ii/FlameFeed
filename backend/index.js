@@ -4,7 +4,7 @@ const connectToDatabase = require("./database");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-const userRouter = require("./Routers/users");  
+const userRouter = require("./Routers/users");
 const postRouter = require("./Routers/Post/post");
 
 dotenv.config();
@@ -21,6 +21,7 @@ app.use(
       const allowedOrigins = [
         "https://netflix-beta-smoky.vercel.app",
         "http://localhost:5173",
+        "https://flamefeed.vercel.app/",
       ];
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
