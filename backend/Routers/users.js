@@ -13,7 +13,7 @@ const {
   getSearchResults,
   addAndRemoveFavourites,
 } = require("../Controllers/users.js");
-const authMiddleware = require("../middlewares/auth.js");
+const authMiddleware = require("../Middlewares/auth.js");
 
 const router = express.Router();
 
