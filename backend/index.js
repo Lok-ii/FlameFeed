@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./Routers/users");
 const postRouter = require("./Routers/Post/post");
+const path = require("path");
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const Port = process.env.PORT;
 const app = express();
 
 connectToDatabase();
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: (origin, callback) => {
