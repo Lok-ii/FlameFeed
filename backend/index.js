@@ -19,9 +19,8 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "https://netflix-beta-smoky.vercel.app",
         "http://localhost:5173",
-        "https://flamefeed.vercel.app/",
+        "https://flamefeed.vercel.app",
       ];
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);

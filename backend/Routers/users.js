@@ -12,7 +12,7 @@ const {
   followUnfollow,
   getSearchResults,
   addAndRemoveFavourites,
-} = require("../controllers/users.js");
+} = require("../Controllers/users.js");
 const authMiddleware = require("../middlewares/auth.js");
 
 const router = express.Router();
