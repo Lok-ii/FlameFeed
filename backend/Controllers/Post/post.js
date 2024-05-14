@@ -32,7 +32,7 @@ const createPost = async (req, res) => {
       try {
         const post = await postModel.create({
           ...req.body,
-          media: req.file.destination + "/" + req.file.filename,
+          media: req.file.path,
           // media: "http://localhost:8080/" + req.file.filename,
           user: req.user._id,
         });
