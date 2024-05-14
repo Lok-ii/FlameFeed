@@ -1,11 +1,11 @@
-const userModel = require("../models/users.js");
+const userModel = require("../Models/users");
 const { log } = require("console");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
-const postModel = require("../Models/post.js");
+const postModel = require("../Models/post");
 
 const uploadPath = path.join(__dirname, "..", "uploads");
 

@@ -12,8 +12,8 @@ const {
   followUnfollow,
   getSearchResults,
   addAndRemoveFavourites,
-} = require("../Controllers/users.js");
-const authMiddleware = require("../Middlewares/auth.js");
+} = require("../Controllers/users");
+const authMiddleware = require("../Middlewares/auth");
 
 const router = express.Router();
 
