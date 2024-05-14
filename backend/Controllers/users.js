@@ -192,8 +192,8 @@ const updateUser = async (req, res) => {
         log(req.file);
         updatedData = {
           ...req.body,
-          photoURL: req.file.path,
-          // photoURL: "http://localhost:8080/" + req.file.filename,
+          // photoURL: req.file.path,
+          photoURL: "https://flamefeed.onrender.com/uploads/" + req.file.filename,
         };
       }
       try {
