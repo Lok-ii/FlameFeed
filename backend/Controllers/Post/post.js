@@ -32,8 +32,8 @@ const createPost = async (req, res) => {
       try {
         const post = await postModel.create({
           ...req.body,
-          // media: req.file.destination + "/" + req.file.filename,
-          media: "http://localhost:8080/" + req.file.filename,
+          media: req.file.destination + "/" + req.file.filename,
+          // media: "http://localhost:8080/" + req.file.filename,
           user: req.user._id,
         });
         const newPost = await postModel.findById(post._id).populate([

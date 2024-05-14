@@ -32,8 +32,8 @@ const userRegistration = async (req, res) => {
         message: "User already exists",
       });
     }
-    const newUser = await new userModel(req.body); // create a new instance of the User model with the new user data from req.body
-    const newUserInstance = await newUser.save(); // save the new user instance to the database
+    const newUser = await new userModel(req.body); 
+    const newUserInstance = await newUser.save();
     res.json({
       success: true,
       message: "User registered successfully, login to continue",
@@ -192,8 +192,8 @@ const updateUser = async (req, res) => {
         log(req.file);
         updatedData = {
           ...req.body,
-          // photoURL: req.file.destination + "/" + req.file.filename,
-          photoURL: "http://localhost:8080/" + req.file.filename,
+          photoURL: req.file.destination + "/" + req.file.filename,
+          // photoURL: "http://localhost:8080/" + req.file.filename,
         };
       }
       try {
