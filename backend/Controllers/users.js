@@ -134,7 +134,6 @@ const addAndRemoveFavourites = async (req, res) => {
       .populate([
         { path: "posts" },
         { path: "posts.user", select: "-password" },
-        { path: "saved" },
       ])
       .select(["-password", "-__v"]);
     const allPosts = await postModel.find().populate([

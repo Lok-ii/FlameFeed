@@ -149,11 +149,12 @@ const Post = ({ post, type }) => {
             {user.saved && (
               <LuBookmark
                 className={`avoid transition-all ${
-                  user.saved.indexOf(post._id) !== -1
+                  user.saved.includes(post._id)
                     ? "fill-red-500 text-red-500"
                     : ""
                 }`}
                 onClick={() => {
+                  console.log(user.saved.includes(post._id));
                   dispatch(
                     createPost({
                       type: "SAVED",
