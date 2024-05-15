@@ -114,8 +114,7 @@ const addAndRemoveFavourites = async (req, res) => {
   let updateObject = {};
   try {
     const user = req.user;
-
-    if (user.saved.includes(req.params.postId)) {
+    if (user.saved.indexOf(req.params.postId)) {
       updateObject = {
         $pull: {
           saved: req.params.postId,
