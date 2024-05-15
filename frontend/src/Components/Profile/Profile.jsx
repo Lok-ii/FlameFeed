@@ -36,11 +36,7 @@ const Profile = () => {
       console.log(findUser.data);
       dispatch(setSearchedUser(findUser.data.user));
     };
-    if (user.username !== params.username) {
-      getUser();
-    } else {
-      dispatch(setSearchedUser(user));
-    }
+    getUser();
   }, [dispatch, params.username, user]);
   return (
     user && (

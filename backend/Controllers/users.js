@@ -32,7 +32,7 @@ const userRegistration = async (req, res) => {
         message: "User already exists",
       });
     }
-    const newUser = await new userModel(req.body); 
+    const newUser = await new userModel(req.body);
     const newUserInstance = await newUser.save();
     res.json({
       success: true,
@@ -113,8 +113,8 @@ const addAndRemoveFavourites = async (req, res) => {
   let message = "";
   let updateObject = {};
   try {
-    const user = req.user;
-    if (user.saved.indexOf(req.params.postId)) {
+    const user = await userModel.findById(req.user._id);
+    if (user.saved.includes(req.params.postId)) {
       updateObject = {
         $pull: {
           saved: req.params.postId,
@@ -191,7 +191,8 @@ const updateUser = async (req, res) => {
         updatedData = {
           ...req.body,
           // photoURL: req.file.path,
-          photoURL: "https://flamefeed.onrender.com/uploads/" + req.file.filename,
+          photoURL:
+            "https://flamefeed.onrender.com/uploads/" + req.file.filename,
         };
       }
       try {
