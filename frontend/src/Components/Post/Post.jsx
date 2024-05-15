@@ -149,7 +149,7 @@ const Post = ({ post, type }) => {
             {user.saved && (
               <LuBookmark
                 className={`avoid transition-all ${
-                  user.saved.indexOf(post._id)
+                  user.saved.indexOf(post._id) !== -1
                     ? "fill-red-500 text-red-500"
                     : ""
                 }`}
